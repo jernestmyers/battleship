@@ -1,12 +1,3 @@
-// import { hit, isSunk } from "./shipModule";
-
-// console.log(hit(50));
-// console.log(hit(66));
-
-// console.log(isSunk([`submarine`, [40, 50, 60], 50]));
-// console.log(isSunk([`submarine`, [40, 50, 60], 40]));
-// console.log(isSunk([`submarine`, [40, 50, 60], 60]));
-
 const Ship = (fleetObject) => {
   const fleet = {
     carrier: fleetObject.carrier,
@@ -15,17 +6,6 @@ const Ship = (fleetObject) => {
     submarine: fleetObject.submarine,
     patrol: fleetObject.patrol,
   };
-  // const hit = (coord) => {
-  //   // map the ship arrays and search for a hit
-  //   // if a hit is made, determine which ship and document in a hit array
-  //   // send hit array and ship name to isSunk
-  //   return `hi`;
-  // };
-  // const isSunk = (length) => {
-  //   // if hit array === length of ship, then true
-  //   // else false
-  // };
-  // return { fleet, hit };
   return { fleet };
 };
 
@@ -64,7 +44,7 @@ const isSunk = (array) => {
       fleetHitsRemaining.set(array[0], shipHitsRemaining);
     }
     // console.log(fleetHitsRemaining);
-    // console.log(isSunk);
+    console.log(isSunk);
     return [isSunk, array[0]];
   }
 };
@@ -76,4 +56,8 @@ const isSunk = (array) => {
 // console.log(isSunk([`submarine`, [40, 50, 60], 40]));
 // console.log(isSunk([`submarine`, [40, 50, 60], 60]));
 
+// module.exports = hit;
+// module.exports = isSunk;
+
 module.exports = { hit, isSunk };
+// export { hit, isSunk };
