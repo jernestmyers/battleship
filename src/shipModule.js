@@ -9,14 +9,6 @@ const Ship = (fleetObject) => {
   return { fleet };
 };
 
-const playerShips = Ship({
-  carrier: [1, 2, 3, 4, 5],
-  battleship: [10, 11, 12, 13],
-  destroyer: [77, 87, 97],
-  submarine: [40, 50, 60],
-  patrol: [58, 59],
-});
-
 const hit = (attackCoord) => {
   const fleetMap = new Map(Object.entries(playerShips.fleet));
   let attackOutcome = [null, null, attackCoord];
@@ -44,20 +36,30 @@ const isSunk = (array) => {
       fleetHitsRemaining.set(array[0], shipHitsRemaining);
     }
     // console.log(fleetHitsRemaining);
-    console.log(isSunk);
+    // console.log(isSunk);
     return [isSunk, array[0]];
   }
 };
 
-// console.log(hit(50));
-// console.log(hit(66));
+// hard coded insantiation of a player's fleet object
+const playerShips = Ship({
+  carrier: [1, 2, 3, 4, 5],
+  battleship: [10, 11, 12, 13],
+  destroyer: [77, 87, 97],
+  submarine: [40, 50, 60],
+  patrol: [58, 59],
+});
 
-// console.log(isSunk([`submarine`, [40, 50, 60], 50]));
-// console.log(isSunk([`submarine`, [40, 50, 60], 40]));
-// console.log(isSunk([`submarine`, [40, 50, 60], 60]));
+// module.exports = { hit, isSunk };
+export { Ship, hit, isSunk };
 
-// module.exports = hit;
-// module.exports = isSunk;
-
-module.exports = { hit, isSunk };
-// export { hit, isSunk };
+// const Ship = (fleetObject) => {
+//   const fleet = [
+//     { name: `Carrier`, length: 5, hits: [], isSunk: false },
+//     { name: `Battleship`, length: 4, hits: [], isSunk: false },
+//     { name: `Destroyer`, length: 3, hits: [], isSunk: false },
+//     { name: `Submarine`, length: 3, hits: [], isSunk: false },
+//     { name: `Patrol Boat`, length: 2, hits: [], isSunk: false },
+//   ];
+//   return { fleet };
+// };
