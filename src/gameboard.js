@@ -1,6 +1,5 @@
 import { Ships } from "./shipModule";
-
-const storedGameboards = [];
+import { storedGameboards } from "./gameHandler";
 
 const Gameboard = (fleetArray) => {
   const gameboard = [
@@ -26,24 +25,12 @@ const Gameboard = (fleetArray) => {
     if (shipsSunkCounter === 5) {
       isGameOver = true;
     }
-    console.log(shipsSunkCounter);
+    console.log(`ships sunk: ${shipsSunkCounter}`);
     return isGameOver;
   };
 
   return { gameboard, misses, ships, isGameOver };
 };
-
-// hard-coded instantiation of playerFleet
-const playerFleet = [
-  { name: "Carrier", shipPlacement: [1, 2, 3, 4, 5] },
-  { name: "Battleship", shipPlacement: [10, 11, 12, 13] },
-  { name: "Destroyer", shipPlacement: [77, 87, 97] },
-  { name: "Submarine", shipPlacement: [40, 50, 60] },
-  { name: "Patrol Boat", shipPlacement: [58, 59] },
-];
-
-const playerBoard = Gameboard(playerFleet);
-storedGameboards.push([`player`, playerBoard]);
 
 // BEGIN-------- creates a randomly placed board for computer ------- //
 const computerFleet = [];
@@ -83,7 +70,6 @@ function orientShip(startCoord, orientation, name, length) {
 
 function verifyCoords(object) {
   const shipToVerify = object.shipPlacement;
-  //   console.log(`${object.name}: ${shipToVerify}`);
   let isPlacementValid = false;
   if (!computerFleet.length) {
     isPlacementValid = true;
@@ -135,14 +121,8 @@ function placeComputerFleet() {
       }
     }
   });
-  //   console.log(computerFleet);
+  return computerFleet;
 }
-
-placeComputerFleet();
-
-const computerBoard = Gameboard(computerFleet);
-storedGameboards.push([`computer`, computerBoard]);
-console.log(storedGameboards);
 // END-------- creates a randomly placed board for computer ------- //
 
 const receiveAttack = (attackCoord, user) => {
@@ -165,40 +145,8 @@ const receiveAttack = (attackCoord, user) => {
     gameboardObject.ships.hit(attackOutcome);
     gameboardObject.ships.isSunk(attackOutcome[0]);
   }
-  console.log(attackOutcome);
-  console.log(storedGameboards);
-  console.log(gameboardObject);
   return attackOutcome;
 };
-
-// receiveAttack(30, `player`);
-// receiveAttack(13, `computer`);
-// receiveAttack(50, `player`);
-// receiveAttack(28, `computer`);
-// receiveAttack(21, `player`);
-// receiveAttack(40, `player`);
-// receiveAttack(60, `player`);
-// receiveAttack(89, `player`);
-// receiveAttack(12, `player`);
-// receiveAttack(19, `player`);
-// receiveAttack(73, `player`);
-
-// function isGameOver(index) {
-//   const array = storedGameboards[index][1].ships.fleet;
-//   let isGameOver = false;
-//   let shipsSunkCounter = 0;
-//   array.filter((obj) => {
-//     if (obj.isSunk) {
-//       shipsSunkCounter += 1;
-//     }
-//   });
-//   if (shipsSunkCounter === 5) {
-//     isGameOver = true;
-//   }
-//   console.log(shipsSunkCounter);
-//   return isGameOver;
-// }
-console.log(storedGameboards[0][1].isGameOver(0));
 
 // const board = [
 //   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -212,4 +160,4 @@ console.log(storedGameboards[0][1].isGameOver(0));
 //   [80, 81, 82, 83, 84, 85, 86, 87, 88, 89],
 //   [90, 91, 92, 93, 94, 95, 96, 97, 98, 99],
 // ];
-export { Gameboard };
+export { Gameboard, placeComputerFleet, receiveAttack };

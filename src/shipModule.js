@@ -28,5 +28,4 @@ const Ships = () => {
   return { fleet, hit, isSunk };
 };
 
-// module.exports = { hit, isSunk };
 export { Ships };
