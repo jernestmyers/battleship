@@ -1,8 +1,5 @@
 import { Ships } from "./shipModule";
 
-const playerShips = Ships();
-const computerShips = Ships();
-
 const storedGameboards = [];
 
 const Gameboard = (fleetArray) => {
@@ -14,7 +11,26 @@ const Gameboard = (fleetArray) => {
     fleetArray[4],
   ];
   const misses = [];
-  return { gameboard, misses };
+  const ships = Ships();
+
+  const isGameOver = () => {
+    const array = ships.fleet;
+    let isGameOver = false;
+    let shipsSunkCounter = 0;
+
+    array.filter((obj) => {
+      if (obj.isSunk) {
+        shipsSunkCounter += 1;
+      }
+    });
+    if (shipsSunkCounter === 5) {
+      isGameOver = true;
+    }
+    console.log(shipsSunkCounter);
+    return isGameOver;
+  };
+
+  return { gameboard, misses, ships, isGameOver };
 };
 
 // hard-coded instantiation of playerFleet
@@ -27,7 +43,7 @@ const playerFleet = [
 ];
 
 const playerBoard = Gameboard(playerFleet);
-storedGameboards.push(playerBoard);
+storedGameboards.push([`player`, playerBoard]);
 
 // BEGIN-------- creates a randomly placed board for computer ------- //
 const computerFleet = [];
@@ -97,8 +113,11 @@ function verifyCoords(object) {
   return isPlacementValid;
 }
 
+// used for the name and length props in the placeComputerFleet fxn
+const shipClone = Ships();
+
 function placeComputerFleet() {
-  computerShips.fleet.forEach((ship) => {
+  shipClone.fleet.forEach((ship) => {
     let isValid = false;
     while (!isValid) {
       isValid = false;
@@ -122,37 +141,33 @@ function placeComputerFleet() {
 placeComputerFleet();
 
 const computerBoard = Gameboard(computerFleet);
-storedGameboards.push(computerBoard);
-// console.log(storedGameboards);
+storedGameboards.push([`computer`, computerBoard]);
+console.log(storedGameboards);
 // END-------- creates a randomly placed board for computer ------- //
 
 const receiveAttack = (attackCoord, user) => {
   let index;
-  let shipObject;
   let attackOutcome = [null, attackCoord];
   if (user === `player`) {
-    shipObject = playerShips;
     index = 0;
   } else {
-    shipObject = computerShips;
     index = 1;
   }
-  const gameboardObject = storedGameboards[index].gameboard;
-  gameboardObject.forEach((object) => {
+  const gameboardObject = storedGameboards[index][1];
+  gameboardObject.gameboard.forEach((object) => {
     if (object.shipPlacement.includes(attackCoord)) {
       attackOutcome = [object.name, attackCoord];
     }
   });
   if (!attackOutcome[0]) {
-    storedGameboards[index].misses.push(attackCoord);
+    gameboardObject.misses.push(attackCoord);
   } else {
-    shipObject.hit(attackOutcome);
-    shipObject.isSunk(attackOutcome[0]);
+    gameboardObject.ships.hit(attackOutcome);
+    gameboardObject.ships.isSunk(attackOutcome[0]);
   }
   console.log(attackOutcome);
   console.log(storedGameboards);
-  console.log(playerShips);
-  console.log(computerShips);
+  console.log(gameboardObject);
   return attackOutcome;
 };
 
@@ -168,6 +183,23 @@ const receiveAttack = (attackCoord, user) => {
 // receiveAttack(19, `player`);
 // receiveAttack(73, `player`);
 
+// function isGameOver(index) {
+//   const array = storedGameboards[index][1].ships.fleet;
+//   let isGameOver = false;
+//   let shipsSunkCounter = 0;
+//   array.filter((obj) => {
+//     if (obj.isSunk) {
+//       shipsSunkCounter += 1;
+//     }
+//   });
+//   if (shipsSunkCounter === 5) {
+//     isGameOver = true;
+//   }
+//   console.log(shipsSunkCounter);
+//   return isGameOver;
+// }
+console.log(storedGameboards[0][1].isGameOver(0));
+
 // const board = [
 //   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
 //   [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
@@ -180,3 +212,4 @@ const receiveAttack = (attackCoord, user) => {
 //   [80, 81, 82, 83, 84, 85, 86, 87, 88, 89],
 //   [90, 91, 92, 93, 94, 95, 96, 97, 98, 99],
 // ];
+export { Gameboard };
