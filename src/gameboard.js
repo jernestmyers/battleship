@@ -1,61 +1,36 @@
-import { Ship } from "./shipModule";
-// need a factory fxn to create both a user and cpu gameboard
-// invoke the Ship factory function to instantiate the ship object once coordinates
-// are selected for the fleet
-// randomly generate CPU gameboard to instantiate its fleet and gameboard
-// create a method receiveAttack that takes a coordinate and responds to a hit and to a miss
-// create isGameOver method
-// track hits and misses to display on gameboards
+import { Ships } from "./shipModule";
 
-const Gameboard = (fleet, user) => {
-  const createFleet = Ship(fleet);
-  // const userFleet = Ship(fleet);
-  //   };
-  //   console.log(user);
-  return { createFleet };
+const playerShips = Ships();
+const computerShips = Ships();
+
+const storedGameboards = [];
+
+const Gameboard = (fleetArray) => {
+  const gameboard = [
+    fleetArray[0],
+    fleetArray[1],
+    fleetArray[2],
+    fleetArray[3],
+    fleetArray[4],
+  ];
+  const misses = [];
+  return { gameboard, misses };
 };
 
-// const playerShips = Ship({
-//   carrier: [1, 2, 3, 4, 5],
-//   battleship: [10, 11, 12, 13],
-//   destroyer: [77, 87, 97],
-//   submarine: [40, 50, 60],
-//   patrol: [58, 59],
-// });
-
-const playerFleet = {
-  carrier: [1, 2, 3, 4, 5],
-  battleship: [10, 11, 12, 13],
-  destroyer: [77, 87, 97],
-  submarine: [40, 50, 60],
-  patrol: [58, 59],
-};
-
-const playerBoard = Gameboard(playerFleet, "player");
-// console.log(playerBoard);
-
-// random ship placement:
-// 1 - randomize orientation: 0 is horiz and 1 is vert
-// 2 - randomize placement: generate random number from 0 to 99
-// 3 - check if random number exists in computerFleet
-// 4 - determine if ship.length must be added or subtracted based on orientation
-//     in order to fit on the board
-// 5 - check if any of the subsequent coordinates exist
-// 6 - if coords exist, discard all and try again
-// 6 - if coords do not exist, store coords in the object used to create the CPU fleet
-
-const board = [
-  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-  [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
-  [20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
-  [30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
-  [40, 41, 42, 43, 44, 45, 46, 47, 48, 49],
-  [50, 51, 52, 53, 54, 55, 56, 57, 58, 59],
-  [60, 61, 62, 63, 64, 65, 66, 67, 68, 69],
-  [70, 71, 72, 73, 74, 75, 76, 77, 78, 79],
-  [80, 81, 82, 83, 84, 85, 86, 87, 88, 89],
-  [90, 91, 92, 93, 94, 95, 96, 97, 98, 99],
+// hard-coded instantiation of playerFleet
+const playerFleet = [
+  { name: "Carrier", shipPlacement: [1, 2, 3, 4, 5] },
+  { name: "Battleship", shipPlacement: [10, 11, 12, 13] },
+  { name: "Destroyer", shipPlacement: [77, 87, 97] },
+  { name: "Submarine", shipPlacement: [40, 50, 60] },
+  { name: "Patrol Boat", shipPlacement: [58, 59] },
 ];
+
+const playerBoard = Gameboard(playerFleet);
+storedGameboards.push(playerBoard);
+
+// BEGIN-------- creates a randomly placed board for computer ------- //
+const computerFleet = [];
 
 function generateRandomPlacement() {
   const numberOfCoordinates = 100;
@@ -92,7 +67,7 @@ function orientShip(startCoord, orientation, name, length) {
 
 function verifyCoords(object) {
   const shipToVerify = object.shipPlacement;
-  console.log(`${object.name}: ${shipToVerify}`);
+  //   console.log(`${object.name}: ${shipToVerify}`);
   let isPlacementValid = false;
   if (!computerFleet.length) {
     isPlacementValid = true;
@@ -123,7 +98,7 @@ function verifyCoords(object) {
 }
 
 function placeComputerFleet() {
-  ships.forEach((ship) => {
+  computerShips.fleet.forEach((ship) => {
     let isValid = false;
     while (!isValid) {
       isValid = false;
@@ -141,17 +116,67 @@ function placeComputerFleet() {
       }
     }
   });
-  console.log(computerFleet);
+  //   console.log(computerFleet);
 }
 
-const ships = [
-  { name: `Carrier`, length: 5 },
-  { name: `Battleship`, length: 4 },
-  { name: `Destroyer`, length: 3 },
-  { name: `Submarine`, length: 3 },
-  { name: `Patrol Boat`, length: 2 },
-];
-
-const computerFleet = [];
-
 placeComputerFleet();
+
+const computerBoard = Gameboard(computerFleet);
+storedGameboards.push(computerBoard);
+// console.log(storedGameboards);
+// END-------- creates a randomly placed board for computer ------- //
+
+const receiveAttack = (attackCoord, user) => {
+  let index;
+  let shipObject;
+  let attackOutcome = [null, attackCoord];
+  if (user === `player`) {
+    shipObject = playerShips;
+    index = 0;
+  } else {
+    shipObject = computerShips;
+    index = 1;
+  }
+  const gameboardObject = storedGameboards[index].gameboard;
+  gameboardObject.forEach((object) => {
+    if (object.shipPlacement.includes(attackCoord)) {
+      attackOutcome = [object.name, attackCoord];
+    }
+  });
+  if (!attackOutcome[0]) {
+    storedGameboards[index].misses.push(attackCoord);
+  } else {
+    shipObject.hit(attackOutcome);
+    shipObject.isSunk(attackOutcome[0]);
+  }
+  console.log(attackOutcome);
+  console.log(storedGameboards);
+  console.log(playerShips);
+  console.log(computerShips);
+  return attackOutcome;
+};
+
+// receiveAttack(30, `player`);
+// receiveAttack(13, `computer`);
+// receiveAttack(50, `player`);
+// receiveAttack(28, `computer`);
+// receiveAttack(21, `player`);
+// receiveAttack(40, `player`);
+// receiveAttack(60, `player`);
+// receiveAttack(89, `player`);
+// receiveAttack(12, `player`);
+// receiveAttack(19, `player`);
+// receiveAttack(73, `player`);
+
+// const board = [
+//   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+//   [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+//   [20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
+//   [30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
+//   [40, 41, 42, 43, 44, 45, 46, 47, 48, 49],
+//   [50, 51, 52, 53, 54, 55, 56, 57, 58, 59],
+//   [60, 61, 62, 63, 64, 65, 66, 67, 68, 69],
+//   [70, 71, 72, 73, 74, 75, 76, 77, 78, 79],
+//   [80, 81, 82, 83, 84, 85, 86, 87, 88, 89],
+//   [90, 91, 92, 93, 94, 95, 96, 97, 98, 99],
+// ];

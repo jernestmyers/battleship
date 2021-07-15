@@ -1,9 +1,16 @@
-import { hit, isSunk } from "./shipModule";
+import { Ships } from "./shipModule";
 import "./gameboard";
 
-// console.log(hit(50));
-// console.log(hit(66));
+// const playerShips = Ships();
+// const computerShips = Ships();
 
-// console.log(isSunk([`submarine`, [40, 50, 60], 50]));
-// console.log(isSunk([`submarine`, [40, 50, 60], 40]));
-// console.log(isSunk([`submarine`, [40, 50, 60], 60]));
+// console.log(playerShips);
+// playerShips.hit([`Submarine`, 30]);
+// playerShips.isSunk(`Submarine`);
+// console.log(playerShips);
+// playerShips.hit([`Patrol Boat`, 15]);
+// playerShips.isSunk(`Patrol Boat`);
+// console.log(playerShips);
+// playerShips.hit([`Patrol Boat`, 16]);
+// playerShips.isSunk(`Patrol Boat`);
+// console.log(playerShips);
