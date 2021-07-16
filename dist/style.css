@@ -1,0 +1,16 @@
+.gameboard {
+  width: 350px;
+  height: 350px;
+  display: grid;
+  grid-template-columns: repeat(10, auto);
+  grid-template-rows: repeat(10, auto);
+  border: 1px solid black;
+}
+
+.square {
+  border: 1px solid black;
+}
+
+.square:hover {
+  background-color: aquamarine;
+}

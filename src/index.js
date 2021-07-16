@@ -1,1 +1,2 @@
 import "./gameHandler";
+import "./renderGame";

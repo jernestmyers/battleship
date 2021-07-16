@@ -1,4 +1,5 @@
 import { Gameboard, placeComputerFleet, receiveAttack } from "./gameboard";
+import { deregisterRemainingEventListneners } from "./renderGame";
 
 const storedGameboards = [];
 
@@ -36,8 +37,8 @@ const playerFleet = [
   { name: "Submarine", shipPlacement: [40, 50, 60] },
   { name: "Patrol Boat", shipPlacement: [58, 59] },
 ];
-
 const playerBoard = Gameboard(playerFleet);
+
 const computerFleet = placeComputerFleet();
 const computerBoard = Gameboard(computerFleet);
 
@@ -46,7 +47,7 @@ storedGameboards.push([`computer`, playerBoard]);
 console.log(storedGameboards);
 
 // BEGIN ----- generates random move for computer ----------- //
-function createNewComputerMoves() {
+function createValidMovesArray() {
   const validMoves = [];
   const maxMoves = 100;
   for (let i = 0; i < maxMoves; i++) {
@@ -55,7 +56,8 @@ function createNewComputerMoves() {
   return validMoves;
 }
 
-const getValidMoves = createNewComputerMoves();
+const getValidMoves = createValidMovesArray();
+const getPlayerMovesRemaining = createValidMovesArray();
 
 function generateComputerAttack() {
   const randomIndex = Math.floor(Math.random() * getValidMoves.length);
@@ -65,18 +67,23 @@ function generateComputerAttack() {
 }
 // END ----- generates random move for computer ----------- //
 
-function gameLoop() {
+function gameLoop(playerMove) {
   let getTurn;
-  let attack;
+  let attackOutcome;
   let isGameOver = false;
-  while (!isGameOver) {
-    getTurn = turnDriver();
-    if (getTurn === `player`) {
-      attack = +prompt(`enter a move`);
-    } else {
-      attack = generateComputerAttack();
-    }
-    const attackOutcome = receiveAttack(attack, getTurn);
+  const indexToSplice = getPlayerMovesRemaining.findIndex(
+    (index) => index === playerMove
+  );
+  getPlayerMovesRemaining.splice(indexToSplice, 1);
+  console.log(getPlayerMovesRemaining);
+  //   for (let i = 0; i < 2; i++) {
+  getTurn = turnDriver();
+  //   if (!isGameOver) {
+  if (getTurn === `player`) {
+    const playerAttack = playerMove;
+    attackOutcome = receiveAttack(playerAttack, getTurn);
+    console.log(`player move`);
+    console.log(storedGameboards);
     if (attackOutcome[0]) {
       storedGameboards.filter((item) => {
         if (item[0] === getTurn) {
@@ -84,11 +91,38 @@ function gameLoop() {
         }
       });
     }
-    console.log(storedGameboards);
+    if (isGameOver) {
+      deregisterRemainingEventListneners(getPlayerMovesRemaining);
+      alert(`game over! ${getTurn} wins!`);
+    }
   }
-  alert(`game over! ${getTurn} wins!`);
+  // } else {
+  if (!isGameOver) {
+    getTurn = turnDriver();
+    const computerAttack = generateComputerAttack();
+    attackOutcome = receiveAttack(computerAttack, getTurn);
+    console.log(`cpu move`);
+    console.log(storedGameboards);
+    if (attackOutcome[0]) {
+      storedGameboards.filter((item) => {
+        if (item[0] === getTurn) {
+          isGameOver = item[1].isGameOver();
+        }
+      });
+    }
+  } else {
+    alert(`game over! ${getTurn} wins!`);
+  }
+  // if (attackOutcome[0]) {
+  //   storedGameboards.filter((item) => {
+  //     if (item[0] === getTurn) {
+  //       isGameOver = item[1].isGameOver();
+  //     }
+  //   });
+  // }
+  //   } else {
+  //   }
+  //   }
 }
 
-// gameLoop();
-
-export { storedGameboards };
+export { storedGameboards, gameLoop };
