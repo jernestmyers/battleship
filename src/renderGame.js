@@ -1,6 +1,6 @@
 import { gameLoop } from "./gameHandler";
 
-function renderGameboard() {
+function renderGameboard(user) {
   const main = document.querySelector(`main`);
   const board = document.createElement(`div`);
   board.classList.add(`gameboard`);
@@ -9,8 +9,12 @@ function renderGameboard() {
     const square = document.createElement(`div`);
     square.textContent = i;
     square.dataset.indexNumber = i;
-    square.classList.add(`square`);
-    square.addEventListener(`click`, playerAttack);
+    if (user === `player`) {
+      square.classList.add(`playerSquare`);
+      square.addEventListener(`click`, playerAttack);
+    } else {
+      square.classList.add(`cpuSquare`);
+    }
     board.appendChild(square);
   }
   main.appendChild(board);
@@ -18,18 +22,33 @@ function renderGameboard() {
 
 const playerAttack = (e) => {
   const coordinateClicked = +e.target.dataset.indexNumber;
-  console.log(coordinateClicked);
   gameLoop(coordinateClicked);
   e.target.removeEventListener(`click`, playerAttack);
 };
 
-renderGameboard();
+renderGameboard(`player`);
+renderGameboard(`cpu`);
 
 function deregisterRemainingEventListneners(array) {
-  const squares = document.querySelectorAll(`.square`);
+  const squares = document.querySelectorAll(`.playerSquare`);
   array.forEach((index) => {
     squares[index].removeEventListener(`click`, playerAttack);
   });
 }
 
-export { deregisterRemainingEventListneners };
+function renderMove(whoseTurn, attackArray) {
+  let squares;
+  const hitIndex = attackArray[1];
+  if (whoseTurn === `player`) {
+    squares = document.querySelectorAll(`.playerSquare`);
+  } else {
+    squares = document.querySelectorAll(`.cpuSquare`);
+  }
+  if (attackArray[0]) {
+    squares[hitIndex].classList.add(`hit`);
+  } else {
+    squares[hitIndex].classList.add(`miss`);
+  }
+}
+
+export { deregisterRemainingEventListneners, renderMove };

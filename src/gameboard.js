@@ -25,7 +25,6 @@ const Gameboard = (fleetArray) => {
     if (shipsSunkCounter === 5) {
       isGameOver = true;
     }
-    console.log(`ships sunk: ${shipsSunkCounter}`);
     return isGameOver;
   };
 

@@ -1,5 +1,5 @@
 import { Gameboard, placeComputerFleet, receiveAttack } from "./gameboard";
-import { deregisterRemainingEventListneners } from "./renderGame";
+import { renderMove, deregisterRemainingEventListneners } from "./renderGame";
 
 const storedGameboards = [];
 
@@ -69,60 +69,86 @@ function generateComputerAttack() {
 
 function gameLoop(playerMove) {
   let getTurn;
-  let attackOutcome;
+  let coordOfAttack;
   let isGameOver = false;
   const indexToSplice = getPlayerMovesRemaining.findIndex(
     (index) => index === playerMove
   );
   getPlayerMovesRemaining.splice(indexToSplice, 1);
-  console.log(getPlayerMovesRemaining);
-  //   for (let i = 0; i < 2; i++) {
-  getTurn = turnDriver();
-  //   if (!isGameOver) {
-  if (getTurn === `player`) {
-    const playerAttack = playerMove;
-    attackOutcome = receiveAttack(playerAttack, getTurn);
-    console.log(`player move`);
-    console.log(storedGameboards);
-    if (attackOutcome[0]) {
-      storedGameboards.filter((item) => {
-        if (item[0] === getTurn) {
-          isGameOver = item[1].isGameOver();
-        }
-      });
-    }
-    if (isGameOver) {
-      deregisterRemainingEventListneners(getPlayerMovesRemaining);
-      alert(`game over! ${getTurn} wins!`);
+  for (let i = 0; i < 2; i++) {
+    if (!isGameOver) {
+      getTurn = turnDriver();
+      if (getTurn === `player`) {
+        coordOfAttack = playerMove;
+      } else {
+        coordOfAttack = generateComputerAttack();
+      }
+      const attackOutcome = receiveAttack(coordOfAttack, getTurn);
+      renderMove(getTurn, attackOutcome);
+      console.log(getTurn);
+      console.log(storedGameboards);
+      if (attackOutcome[0]) {
+        storedGameboards.filter((item) => {
+          if (item[0] === getTurn) {
+            isGameOver = item[1].isGameOver();
+          }
+        });
+      }
+      if (isGameOver) {
+        deregisterRemainingEventListneners(getPlayerMovesRemaining);
+        alert(`game over! ${getTurn} wins!`);
+      }
     }
   }
-  // } else {
-  if (!isGameOver) {
-    getTurn = turnDriver();
-    const computerAttack = generateComputerAttack();
-    attackOutcome = receiveAttack(computerAttack, getTurn);
-    console.log(`cpu move`);
-    console.log(storedGameboards);
-    if (attackOutcome[0]) {
-      storedGameboards.filter((item) => {
-        if (item[0] === getTurn) {
-          isGameOver = item[1].isGameOver();
-        }
-      });
-    }
-  } else {
-    alert(`game over! ${getTurn} wins!`);
-  }
-  // if (attackOutcome[0]) {
-  //   storedGameboards.filter((item) => {
-  //     if (item[0] === getTurn) {
-  //       isGameOver = item[1].isGameOver();
-  //     }
-  //   });
-  // }
-  //   } else {
-  //   }
-  //   }
 }
+
+// function gameLoop(playerMove) {
+//   let getTurn;
+//   let attackOutcome;
+//   let isGameOver = false;
+//   const indexToSplice = getPlayerMovesRemaining.findIndex(
+//     (index) => index === playerMove
+//   );
+//   getPlayerMovesRemaining.splice(indexToSplice, 1);
+//   console.log(getPlayerMovesRemaining);
+//   getTurn = turnDriver();
+//   if (getTurn === `player`) {
+//     const playerAttack = playerMove;
+//     attackOutcome = receiveAttack(playerAttack, getTurn);
+//     renderMove(getTurn, attackOutcome);
+//     console.log(`player move`);
+//     console.log(storedGameboards);
+//     if (attackOutcome[0]) {
+//       storedGameboards.filter((item) => {
+//         if (item[0] === getTurn) {
+//           isGameOver = item[1].isGameOver();
+//         }
+//       });
+//     }
+//     if (isGameOver) {
+//       deregisterRemainingEventListneners(getPlayerMovesRemaining);
+//       alert(`game over! ${getTurn} wins!`);
+//     }
+//   }
+//   if (!isGameOver) {
+//     getTurn = turnDriver();
+//     const computerAttack = generateComputerAttack();
+//     attackOutcome = receiveAttack(computerAttack, getTurn);
+//     renderMove(getTurn, attackOutcome);
+//     console.log(`cpu move`);
+//     console.log(storedGameboards);
+//     if (attackOutcome[0]) {
+//       storedGameboards.filter((item) => {
+//         if (item[0] === getTurn) {
+//           isGameOver = item[1].isGameOver();
+//         }
+//       });
+//     }
+//     if (isGameOver) {
+//       deregisterRemainingEventListneners(getPlayerMovesRemaining);
+//       alert(`game over! ${getTurn} wins!`);
+//     }
+//   }
+// }
 
 export { storedGameboards, gameLoop };
