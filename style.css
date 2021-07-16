@@ -1,3 +1,8 @@
+main {
+  display: flex;
+  justify-content: space-around;
+}
+
 .gameboard {
   width: 350px;
   height: 350px;
@@ -7,10 +12,19 @@
   border: 1px solid black;
 }
 
-.square {
+.playerSquare,
+.cpuSquare {
   border: 1px solid black;
 }
 
-.square:hover {
+.playerSquare:hover {
   background-color: aquamarine;
+}
+
+.hit {
+  background-color: red;
+}
+
+.miss {
+  background-color: blue;
 }
