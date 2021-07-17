@@ -3,6 +3,11 @@ main {
   justify-content: space-around;
 }
 
+#player-board,
+#cpu-board {
+  background-color: gray;
+}
+
 .gameboard {
   width: 350px;
   height: 350px;
@@ -27,4 +32,54 @@ main {
 
 .miss {
   background-color: blue;
+}
+
+.ships-rendered {
+  margin: 0;
+  position: relative;
+}
+
+img {
+  position: absolute;
+}
+
+#submarine-img {
+  /* display: none; */
+  top: 145px;
+  left: 2px;
+  height: 100px;
+  width: 30px;
+}
+
+#patrol-img {
+  /* display: none; */
+  top: 179px;
+  left: 283px;
+  height: 30px;
+  width: 65px;
+}
+
+#carrier-img {
+  /* display: none; */
+  top: 3px;
+  left: 40px;
+  height: 30px;
+  width: 170px;
+}
+
+#destroyer-img {
+  /* display: none; */
+  top: 283px;
+  left: 212px;
+  width: 100px;
+  height: 30px;
+  transform: rotate(-90deg);
+}
+
+#battleship-img {
+  /* display: none; */
+  top: 38px;
+  left: 3px;
+  height: 30px;
+  width: 135px;
 }
