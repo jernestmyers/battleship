@@ -15,20 +15,6 @@ function turnDriver() {
   return whoseMove;
 }
 
-// const Player = () => {
-//   const isTurn = () => {
-//     if (turnCounter % 2 !== 0) {
-//       return `player`;
-//     } else {
-//       return `computer`;
-//     }
-//   };
-//   return { isTurn };
-// };
-
-// const player = Player();
-// const computer = Player();
-
 // hard-coded instantiation of playerFleet
 const playerFleet = [
   { name: "Carrier", shipPlacement: [1, 2, 3, 4, 5] },

@@ -1,7 +1,12 @@
 import { gameLoop } from "./gameHandler";
 
 function renderGameboard(user) {
-  const main = document.querySelector(`main`);
+  let boardDiv;
+  if (user === `player`) {
+    boardDiv = document.querySelector(`#player-board`);
+  } else {
+    boardDiv = document.querySelector(`#cpu-board`);
+  }
   const board = document.createElement(`div`);
   board.classList.add(`gameboard`);
   const maxSquares = 100;
@@ -17,7 +22,7 @@ function renderGameboard(user) {
     }
     board.appendChild(square);
   }
-  main.appendChild(board);
+  boardDiv.appendChild(board);
 }
 
 const playerAttack = (e) => {
