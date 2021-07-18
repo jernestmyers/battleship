@@ -1,5 +1,6 @@
 import { Ships } from "./shipModule";
 import { storedGameboards } from "./gameHandler";
+import { renderComputerShips } from "./renderGame";
 
 const Gameboard = (fleetArray) => {
   const gameboard = [
@@ -120,6 +121,7 @@ function placeComputerFleet() {
       }
     }
   });
+  renderComputerShips(computerFleet);
   return computerFleet;
 }
 // END-------- creates a randomly placed board for computer ------- //

@@ -31,7 +31,7 @@ const playerAttack = (e) => {
   e.target.removeEventListener(`click`, playerAttack);
 };
 
-renderGameboard(`player`);
+// renderGameboard(`player`);
 renderGameboard(`cpu`);
 
 function deregisterRemainingEventListneners(array) {
@@ -56,4 +56,59 @@ function renderMove(whoseTurn, attackArray) {
   }
 }
 
-export { deregisterRemainingEventListneners, renderMove };
+function renderComputerShips(cpuFleet) {
+  const playerBoard = document.querySelector(`#player-board`);
+  let imgSrc;
+
+  cpuFleet.forEach((shipObject) => {
+    const container = document.createElement(`div`);
+    container.classList.add(`ships-rendered`);
+    const shipImage = document.createElement(`img`);
+    if (shipObject.name === `Patrol Boat`) {
+      imgSrc = `./imgs/patrol.png`;
+      shipImage.classList.add(`patrol`);
+    } else {
+      const shipName = shipObject.name.toLowerCase();
+      imgSrc = `./imgs/${shipName}.png`;
+      shipImage.classList.add(`${shipName}`);
+    }
+    shipImage.src = imgSrc;
+
+    const sortAscending = shipObject.shipPlacement.sort((x, y) => x - y);
+    const dimensionOfSquare = 35;
+    let topOffset;
+    let leftOffset;
+    if (sortAscending[0] + 1 === sortAscending[1]) {
+      // place horizontal ships
+      topOffset = Math.floor(sortAscending[0] / 10) * dimensionOfSquare;
+      if (sortAscending[0] < 10) {
+        leftOffset = sortAscending[0] * dimensionOfSquare;
+      } else {
+        leftOffset = +sortAscending[0].toString().charAt(1) * dimensionOfSquare;
+      }
+    } else {
+      // place vertical ships
+      shipImage.style.transform = `rotate(-90deg)`;
+      topOffset =
+        Math.floor(sortAscending[0] / 10) * dimensionOfSquare +
+        ((sortAscending.length - 1) / 2) * 35;
+      if (sortAscending[0] < 10) {
+        leftOffset =
+          sortAscending[0] * dimensionOfSquare -
+          ((sortAscending.length - 1) / 2) * 35;
+      } else {
+        leftOffset =
+          +sortAscending[0].toString().charAt(1) * dimensionOfSquare -
+          ((sortAscending.length - 1) / 2) * 35;
+      }
+    }
+
+    shipImage.style.top = `${topOffset}px`;
+    shipImage.style.left = `${leftOffset}px`;
+    container.appendChild(shipImage);
+    playerBoard.appendChild(container);
+  });
+  renderGameboard(`player`);
+}
+
+export { deregisterRemainingEventListneners, renderMove, renderComputerShips };

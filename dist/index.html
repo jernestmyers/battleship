@@ -9,21 +9,25 @@
   <body>
     <header>BATTLESHIP</header>
     <main>
+      <div id="place-ships-container">
+        <img class="submarine ships-to-place" src="./imgs/submarine.png" />
+        <img class="patrol ships-to-place" src="./imgs/patrol.png" />
+        <img class="carrier ships-to-place" src="./imgs/carrier.png" />
+        <img class="destroyer ships-to-place" src="./imgs/destroyer.png" />
+        <img class="battleship ships-to-place" src="./imgs/battleship.png" />
+      </div>
       <div id="player-board"></div>
       <div id="cpu-board">
         <div class="ships-rendered">
           <img
             class="vertical-img"
             id="submarine-img"
-            src="./imgs/submarine-vert.png"
+            src="./imgs/submarine.png"
+            draggable="true"
           />
         </div>
         <div class="ships-rendered">
-          <img
-            class="horiz-img"
-            id="patrol-img"
-            src="./imgs/patrol-horiz.png"
-          />
+          <img class="horiz-img" id="patrol-img" src="./imgs/patrol.png" />
         </div>
         <div class="ships-rendered">
           <img class="horiz-img" id="carrier-img" src="./imgs/carrier.png" />
@@ -42,9 +46,6 @@
             src="./imgs/destroyer.png"
           />
         </div>
-        <!-- <div class="ships-rendered">
-          <img class="horiz-img" id="test" src="./imgs/submarine-horiz.png" />
-        </div> -->
       </div>
     </main>
     <script src="./main.js"></script>
