@@ -7,7 +7,11 @@
   </head>
 
   <body>
-    <header>BATTLESHIP</header>
+    <header>
+      <h1 id="page-title">
+        B&nbspA&nbspT&nbspT&nbspL&nbspE&nbspS&nbspH&nbspI&nbspP
+      </h1>
+    </header>
     <main>
       <div id="place-ships-container">
         <img class="submarine ships-to-place" src="./imgs/submarine.png" />
@@ -16,8 +20,11 @@
         <img class="destroyer ships-to-place" src="./imgs/destroyer.png" />
         <img class="battleship ships-to-place" src="./imgs/battleship.png" />
       </div>
-      <div id="player-board"></div>
+      <div id="player-board">
+        <h2>You</h2>
+      </div>
       <div id="cpu-board">
+        <h2>Computer</h2>
         <div class="ships-rendered">
           <img
             class="vertical-img"
