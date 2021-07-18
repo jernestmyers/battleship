@@ -19,6 +19,7 @@ main {
 
 .playerSquare,
 .cpuSquare {
+  position: relative;
   border: 1px solid black;
 }
 
@@ -41,45 +42,76 @@ main {
 
 img {
   position: absolute;
+  height: 35px;
 }
 
 #submarine-img {
   /* display: none; */
-  top: 145px;
-  left: 2px;
-  height: 100px;
-  width: 30px;
+  width: 105px;
+  top: 175px;
+  left: -35px;
+  transform: rotate(-90deg);
 }
 
 #patrol-img {
   /* display: none; */
-  top: 179px;
-  left: 283px;
-  height: 30px;
-  width: 65px;
+  width: 70px;
+  top: 175px;
+  left: 280px;
 }
 
 #carrier-img {
   /* display: none; */
-  top: 3px;
-  left: 40px;
-  height: 30px;
-  width: 170px;
+  width: 175px;
+  top: 0px;
+  left: 35px;
 }
 
 #destroyer-img {
   /* display: none; */
-  top: 283px;
-  left: 212px;
-  width: 100px;
-  height: 30px;
+  width: 105px;
+  top: 280px;
+  left: 210px;
   transform: rotate(-90deg);
 }
 
 #battleship-img {
   /* display: none; */
-  top: 38px;
-  left: 3px;
-  height: 30px;
-  width: 135px;
+  width: 140px;
+  top: 35px;
+  left: 0px;
+}
+
+#place-ships-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.submarine {
+  position: absolute;
+  width: 105px;
+}
+
+.patrol {
+  position: absolute;
+  width: 70px;
+}
+
+.carrier {
+  position: absolute;
+  width: 175px;
+}
+
+.destroyer {
+  position: absolute;
+  width: 105px;
+}
+
+.battleship {
+  position: absolute;
+  width: 140px;
+}
+
+.ships-to-place {
+  position: static;
 }
