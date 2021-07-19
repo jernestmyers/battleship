@@ -113,8 +113,9 @@ img {
 
 #place-ships-container {
   display: flex;
-  display: none;
+  /* display: none; */
   flex-direction: column;
+  width: 175px;
 }
 
 .submarine {
@@ -144,4 +145,8 @@ img {
 
 .ships-to-place {
   position: static;
+}
+
+#player-board {
+  display: none;
 }
