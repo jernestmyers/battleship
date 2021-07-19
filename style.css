@@ -112,6 +112,7 @@ img {
 }
 
 #place-ships-container {
+  position: relative;
   display: flex;
   /* display: none; */
   flex-direction: column;
@@ -144,9 +145,14 @@ img {
 }
 
 .ships-to-place {
-  position: static;
+  /* position: static; */
+  top: 30px;
 }
 
 #player-board {
+  display: none;
+}
+
+.hide-ship {
   display: none;
 }
