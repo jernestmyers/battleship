@@ -14,44 +14,51 @@
     </header>
     <main>
       <div id="place-ships-container">
-        <img class="submarine ships-to-place" src="./imgs/submarine.png" />
-        <img class="patrol ships-to-place" src="./imgs/patrol.png" />
-        <img class="carrier ships-to-place" src="./imgs/carrier.png" />
-        <img class="destroyer ships-to-place" src="./imgs/destroyer.png" />
-        <img class="battleship ships-to-place" src="./imgs/battleship.png" />
+        <img
+          class="carrier ships-to-place"
+          id="player-carrier"
+          src="./imgs/carrier.png"
+        />
+        <img
+          class="battleship ships-to-place"
+          id="player-battleship"
+          src="./imgs/battleship.png"
+        />
+        <img
+          class="destroyer ships-to-place"
+          id="player-destroyer"
+          src="./imgs/destroyer.png"
+        />
+        <img
+          class="submarine ships-to-place"
+          id="player-submarine"
+          src="./imgs/submarine.png"
+        />
+        <img
+          class="patrol ships-to-place"
+          id="player-patrol"
+          src="./imgs/patrol.png"
+        />
       </div>
       <div id="player-board">
         <h2>You</h2>
       </div>
       <div id="cpu-board">
         <h2>Computer</h2>
-        <div class="ships-rendered">
-          <img
-            class="vertical-img"
-            id="submarine-img"
-            src="./imgs/submarine.png"
-            draggable="true"
-          />
+        <div class="ships-rendered" id="carrier-container">
+          <!-- <img id="carrier-img" src="./imgs/carrier.png" /> -->
         </div>
-        <div class="ships-rendered">
-          <img class="horiz-img" id="patrol-img" src="./imgs/patrol.png" />
+        <div class="ships-rendered" id="battleship-container">
+          <!-- <img id="battleship-img" src="./imgs/battleship.png" /> -->
         </div>
-        <div class="ships-rendered">
-          <img class="horiz-img" id="carrier-img" src="./imgs/carrier.png" />
+        <div class="ships-rendered" id="destroyer-container">
+          <!-- <img id="destroyer-img" src="./imgs/destroyer.png" /> -->
         </div>
-        <div class="ships-rendered">
-          <img
-            class="horiz-img"
-            id="battleship-img"
-            src="./imgs/battleship.png"
-          />
+        <div class="ships-rendered" id="submarine-container">
+          <!-- <img id="submarine-img" src="./imgs/submarine.png" draggable="true" /> -->
         </div>
-        <div class="ships-rendered">
-          <img
-            class="horiz-img"
-            id="destroyer-img"
-            src="./imgs/destroyer.png"
-          />
+        <div class="ships-rendered" id="patrol-container">
+          <!-- <img id="patrol-img" src="./imgs/patrol.png" /> -->
         </div>
       </div>
     </main>
