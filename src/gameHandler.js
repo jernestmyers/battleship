@@ -30,7 +30,6 @@ const computerBoard = Gameboard(computerFleet);
 
 storedGameboards.push([`player`, computerBoard]);
 storedGameboards.push([`computer`, playerBoard]);
-console.log(storedGameboards);
 
 // BEGIN ----- generates random move for computer ----------- //
 function createValidMovesArray() {
@@ -71,8 +70,6 @@ function gameLoop(playerMove) {
       }
       const attackOutcome = receiveAttack(coordOfAttack, getTurn);
       renderMove(getTurn, attackOutcome);
-      console.log(getTurn);
-      console.log(storedGameboards);
       if (attackOutcome[0]) {
         storedGameboards.filter((item) => {
           if (item[0] === getTurn) {
@@ -87,54 +84,5 @@ function gameLoop(playerMove) {
     }
   }
 }
-
-// function gameLoop(playerMove) {
-//   let getTurn;
-//   let attackOutcome;
-//   let isGameOver = false;
-//   const indexToSplice = getPlayerMovesRemaining.findIndex(
-//     (index) => index === playerMove
-//   );
-//   getPlayerMovesRemaining.splice(indexToSplice, 1);
-//   console.log(getPlayerMovesRemaining);
-//   getTurn = turnDriver();
-//   if (getTurn === `player`) {
-//     const playerAttack = playerMove;
-//     attackOutcome = receiveAttack(playerAttack, getTurn);
-//     renderMove(getTurn, attackOutcome);
-//     console.log(`player move`);
-//     console.log(storedGameboards);
-//     if (attackOutcome[0]) {
-//       storedGameboards.filter((item) => {
-//         if (item[0] === getTurn) {
-//           isGameOver = item[1].isGameOver();
-//         }
-//       });
-//     }
-//     if (isGameOver) {
-//       deregisterRemainingEventListneners(getPlayerMovesRemaining);
-//       alert(`game over! ${getTurn} wins!`);
-//     }
-//   }
-//   if (!isGameOver) {
-//     getTurn = turnDriver();
-//     const computerAttack = generateComputerAttack();
-//     attackOutcome = receiveAttack(computerAttack, getTurn);
-//     renderMove(getTurn, attackOutcome);
-//     console.log(`cpu move`);
-//     console.log(storedGameboards);
-//     if (attackOutcome[0]) {
-//       storedGameboards.filter((item) => {
-//         if (item[0] === getTurn) {
-//           isGameOver = item[1].isGameOver();
-//         }
-//       });
-//     }
-//     if (isGameOver) {
-//       deregisterRemainingEventListneners(getPlayerMovesRemaining);
-//       alert(`game over! ${getTurn} wins!`);
-//     }
-//   }
-// }
 
 export { storedGameboards, gameLoop };
