@@ -4,6 +4,7 @@ import {
   deregisterRemainingEventListneners,
   renderPlayerShips,
 } from "./renderGame";
+import { hideShipsToPlace } from "./index.js";
 
 const storedGameboards = [];
 
@@ -33,6 +34,7 @@ const randomizePlayerFleetBtn = document.querySelector(
 randomizePlayerFleetBtn.addEventListener(`click`, randomizePlayerFleet);
 
 function randomizePlayerFleet() {
+  hideShipsToPlace();
   if (storedGameboards[1]) {
     storedGameboards.pop();
     const cpuBoard = document.querySelector(`#cpu-board`);
