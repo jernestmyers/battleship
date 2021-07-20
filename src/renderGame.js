@@ -112,8 +112,11 @@ function renderComputerShips(cpuFleet) {
 }
 
 function renderPlayerShips(fleet) {
+  console.log(!fleet[0].shipPlacement);
   console.log(fleet[0].shipPlacement);
-  if (!fleet[0].shipPlacement) {
+  console.log(fleet[0].shipPlacement[0] === undefined);
+  if (fleet[0].shipPlacement[0] === undefined) {
+    console.log(`here`);
     return;
   }
   const cpuBoard = document.querySelector(`#cpu-board`);
@@ -168,7 +171,6 @@ function renderPlayerShips(fleet) {
     container.appendChild(shipImage);
     cpuBoard.appendChild(container);
   });
-  // renderGameboard(`cpu`);
 }
 
 export {
