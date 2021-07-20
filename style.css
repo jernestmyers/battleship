@@ -67,7 +67,9 @@ main {
   background-color: blue;
 }
 
-.ships-rendered {
+.player-ships-rendered,
+.cpu-ships-rendered,
+.player-ships-container {
   margin: 0;
   position: relative;
 }
@@ -117,6 +119,7 @@ img {
 #place-ships-container {
   position: relative;
   display: flex;
+  align-items: center;
   margin-right: 5rem;
   margin-top: 26.5px;
   /* display: none; */
@@ -150,14 +153,51 @@ img {
 }
 
 .ships-to-place {
-  /* position: static; */
-  top: 30px;
+  /* top: 30px; */
+  top: 81px;
 }
 
 #player-board {
   display: none;
+  margin-right: 5rem;
 }
 
 .hide-ship {
   display: none;
+}
+
+#btn-rotate-ship {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: default;
+  height: 30px;
+  width: 80px;
+  border-radius: 10px;
+}
+
+#rotate-label {
+  padding: 0;
+  margin: 0;
+  margin-left: 0.75rem;
+  font-size: 14px;
+}
+
+#btn-rotate-ship:hover,
+#randomize-player-fleet:hover {
+  background-color: #e8e8e8;
+}
+
+#randomize-player-fleet {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: default;
+  background-color: #c1c1c1;
+  font-size: 14px;
+  font-weight: bold;
+  height: 40px;
+  width: 175px;
+  border-radius: 10px;
+  margin-bottom: 5px;
 }
