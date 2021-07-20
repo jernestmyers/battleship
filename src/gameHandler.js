@@ -1,5 +1,9 @@
 import { Gameboard, placeComputerFleet, receiveAttack } from "./gameboard";
-import { renderMove, deregisterRemainingEventListneners } from "./renderGame";
+import {
+  renderMove,
+  deregisterRemainingEventListneners,
+  renderPlayerShips,
+} from "./renderGame";
 
 const storedGameboards = [];
 
@@ -15,21 +19,41 @@ function turnDriver() {
   return whoseMove;
 }
 
-// hard-coded instantiation of playerFleet
-const playerFleet = [
-  { name: "Carrier", shipPlacement: [1, 2, 3, 4, 5] },
-  { name: "Battleship", shipPlacement: [10, 11, 12, 13] },
-  { name: "Destroyer", shipPlacement: [77, 87, 97] },
-  { name: "Submarine", shipPlacement: [40, 50, 60] },
-  { name: "Patrol Boat", shipPlacement: [58, 59] },
-];
-const playerBoard = Gameboard(playerFleet);
+// // hard-coded instantiation of playerFleet
+// const playerFleet = [
+//   { name: "Carrier", shipPlacement: [1, 2, 3, 4, 5] },
+//   { name: "Battleship", shipPlacement: [10, 11, 12, 13] },
+//   { name: "Destroyer", shipPlacement: [77, 87, 97] },
+//   { name: "Submarine", shipPlacement: [40, 50, 60] },
+//   { name: "Patrol Boat", shipPlacement: [58, 59] },
+// ];
+const randomizePlayerFleetBtn = document.querySelector(
+  `#randomize-player-fleet`
+);
+randomizePlayerFleetBtn.addEventListener(`click`, randomizePlayerFleet);
 
-const computerFleet = placeComputerFleet();
+function randomizePlayerFleet() {
+  if (storedGameboards[1]) {
+    storedGameboards.pop();
+    const cpuBoard = document.querySelector(`#cpu-board`);
+    const renderedPlayerShips = document.querySelectorAll(
+      `.player-ships-rendered`
+    );
+    for (let i = 0; i < 5; i++) {
+      cpuBoard.removeChild(renderedPlayerShips[i]);
+    }
+    // console.log(storedGameboards);
+  }
+  const playerFleetArray = [];
+  const playerFleet = placeComputerFleet(`user`, playerFleetArray);
+  const playerBoard = Gameboard(playerFleet);
+  storedGameboards.push([`computer`, playerBoard]);
+}
+
+const cpuFleetArray = [];
+const computerFleet = placeComputerFleet(`cpu`, cpuFleetArray);
 const computerBoard = Gameboard(computerFleet);
-
 storedGameboards.push([`player`, computerBoard]);
-storedGameboards.push([`computer`, playerBoard]);
 
 // BEGIN ----- generates random move for computer ----------- //
 function createValidMovesArray() {

@@ -62,7 +62,7 @@ function renderComputerShips(cpuFleet) {
 
   cpuFleet.forEach((shipObject) => {
     const container = document.createElement(`div`);
-    container.classList.add(`ships-rendered`);
+    container.classList.add(`cpu-ships-rendered`);
     const shipImage = document.createElement(`img`);
     if (shipObject.name === `Patrol Boat`) {
       imgSrc = `./imgs/patrol.png`;
@@ -112,11 +112,10 @@ function renderComputerShips(cpuFleet) {
 }
 
 function renderPlayerShips(fleet) {
-  console.log(!fleet[0].shipPlacement);
-  console.log(fleet[0].shipPlacement);
-  console.log(fleet[0].shipPlacement[0] === undefined);
+  // console.log(!fleet[0].shipPlacement);
+  // console.log(fleet[0].shipPlacement);
+  // console.log(fleet[0].shipPlacement[0] === undefined);
   if (fleet[0].shipPlacement[0] === undefined) {
-    console.log(`here`);
     return;
   }
   const cpuBoard = document.querySelector(`#cpu-board`);
@@ -124,7 +123,7 @@ function renderPlayerShips(fleet) {
 
   fleet.forEach((shipObject) => {
     const container = document.createElement(`div`);
-    container.classList.add(`ships-rendered`);
+    container.classList.add(`player-ships-rendered`);
     const shipImage = document.createElement(`img`);
     if (shipObject.name === `Patrol Boat`) {
       imgSrc = `./imgs/patrol.png`;
@@ -134,6 +133,7 @@ function renderPlayerShips(fleet) {
       imgSrc = `./imgs/${shipName}.png`;
       shipImage.classList.add(`${shipName}`);
     }
+    shipImage.classList.add(`invalid`);
     shipImage.src = imgSrc;
 
     const sortAscending = shipObject.shipPlacement.sort((x, y) => x - y);

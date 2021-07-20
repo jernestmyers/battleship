@@ -241,10 +241,10 @@ function rotateShip(e) {
   if (!shipImgs[shipsPlaced].style.rotate) {
     shipImgs[shipsPlaced].style.rotate = `-90deg`;
     shipImgs[shipsPlaced].style.top =
-      30 + ((shipLengths[shipsPlaced] - 1) / 2) * 35 + `px`;
+      81 + ((shipLengths[shipsPlaced] - 1) / 2) * 35 + `px`;
   } else {
     shipImgs[shipsPlaced].style.rotate = ``;
-    shipImgs[shipsPlaced].style.top = 30 + `px`;
+    shipImgs[shipsPlaced].style.top = 81 + `px`;
   }
 }
 
@@ -257,7 +257,6 @@ shipImgs.forEach((ship) => {
 });
 
 function beginShipPlacement(event) {
-  rotateBtn.style.display = `none`;
   // (1) prepare to move element: make absolute and on top by z-index
   shipImgs[shipsPlaced].style.position = "absolute";
   shipImgs[shipsPlaced].style.zIndex = 1000;
@@ -303,6 +302,41 @@ function beginShipPlacement(event) {
     moveAt(event.pageX, event.pageY);
     shipImgs[shipsPlaced].hidden = true;
     let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
+
+    // FOIHDFOIFHSOIFHDF ----- attempting to validate drop ----- FOJDSIFHF //
+    let isDropValid;
+    let elemBelowArray = [];
+    elemBelowArray.shift();
+    for (let i = 0; i < shipLengths[shipsPlaced]; i++) {
+      let checker;
+      if (shipImgs[shipsPlaced].style.rotate) {
+        checker = document
+          .elementFromPoint(event.clientX, event.clientY + i * 35)
+          .getAttribute(`class`);
+      } else {
+        checker = document
+          .elementFromPoint(event.clientX + i * 35, event.clientY)
+          .getAttribute(`class`);
+      }
+      elemBelowArray.push(checker);
+      if (elemBelowArray[0]) {
+        let counter = 0;
+        elemBelowArray.forEach((item) => {
+          if ((item && item.includes(`invalid`)) || item === null) {
+            counter += 1;
+          }
+        });
+        if (counter) {
+          isDropValid = false;
+        } else {
+          isDropValid = true;
+        }
+        console.log(isDropValid);
+      }
+    }
+    console.log(elemBelowArray);
+    // FOIHDFOIFHSOIFHDF ----- attempting to validate drop ----- FOJDSIFHF //
+
     shipImgs[shipsPlaced].hidden = false;
 
     // mousemove events may trigger out of the window (when the ship is dragged off-screen)
@@ -311,7 +345,7 @@ function beginShipPlacement(event) {
 
     // potential droppables are labeled with the class "droppable" (can be other logic)
     droppableBelow = elemBelow.closest(".cpuSquare");
-    console.log(droppableBelow);
+    // console.log(droppableBelow);
 
     if (!droppableBelow) {
       shipImgs[shipsPlaced].style.cursor = `no-drop`;
@@ -418,7 +452,6 @@ function beginShipPlacement(event) {
       cpuBoardSquares.forEach((square) => {
         square.style.backgroundColor = `gray`;
       });
-      console.log(shipImgs[1]);
       shipImgs.forEach((ship, index) => {
         if (index === playerFleet.length) {
           ship.classList.remove(`hide-ship`);
@@ -437,7 +470,7 @@ function beginShipPlacement(event) {
         shipImgs[shipsPlaced].style.rotate = ``;
       }
       shipImgs[shipsPlaced].style.position = "absolute";
-      shipImgs[shipsPlaced].style.top = "30px";
+      shipImgs[shipsPlaced].style.top = "81px";
       shipImgs[shipsPlaced].style.left = "0px";
       shipImgs[shipsPlaced].style.zIndex = 0;
       shipImgs[shipsPlaced].style.cursor = `grab`;
@@ -445,12 +478,3 @@ function beginShipPlacement(event) {
     rotateBtn.style.display = ``;
   };
 }
-
-// // hard-coded instantiation of playerFleet
-// const playerFleet = [
-//   { name: "Carrier", shipPlacement: [1, 2, 3, 4, 5] },
-//   { name: "Battleship", shipPlacement: [10, 11, 12, 13] },
-//   { name: "Destroyer", shipPlacement: [77, 87, 97] },
-//   { name: "Submarine", shipPlacement: [40, 50, 60] },
-//   { name: "Patrol Boat", shipPlacement: [58, 59] },
-// ];

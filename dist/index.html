@@ -14,7 +14,27 @@
     </header>
     <main>
       <div id="place-ships-container">
-        <button id="btn-rotate-ship">rotate ship</button>
+        <div id="randomize-player-fleet">
+          <p id="randomize-text">randomly place all ships</p>
+        </div>
+        <div id="btn-rotate-ship">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="black"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="feather feather-rotate-cw"
+          >
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+          <p id="rotate-label">rotate</p>
+        </div>
         <img
           class="carrier ships-to-place"
           id="player-carrier"
@@ -49,33 +69,23 @@
         <div
           class="ships-rendered player-ships-container"
           id="carrier-container"
-        >
-          <!-- <img id="carrier-img" src="./imgs/carrier.png" /> -->
-        </div>
+        ></div>
         <div
           class="ships-rendered player-ships-container"
           id="battleship-container"
-        >
-          <!-- <img id="battleship-img" src="./imgs/battleship.png" /> -->
-        </div>
+        ></div>
         <div
           class="ships-rendered player-ships-container"
           id="destroyer-container"
-        >
-          <!-- <img id="destroyer-img" src="./imgs/destroyer.png" /> -->
-        </div>
+        ></div>
         <div
           class="ships-rendered player-ships-container"
           id="submarine-container"
-        >
-          <!-- <img id="submarine-img" src="./imgs/submarine.png" draggable="true" /> -->
-        </div>
+        ></div>
         <div
           class="ships-rendered player-ships-container"
           id="patrol-container"
-        >
-          <!-- <img id="patrol-img" src="./imgs/patrol.png" /> -->
-        </div>
+        ></div>
       </div>
     </main>
     <script src="./main.js"></script>
