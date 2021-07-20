@@ -105,6 +105,26 @@ function beginShipPlacement(event) {
     shipImgs[shipsPlaced].hidden = true;
     let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
 
+    // mousemove events may trigger out of the window (when the ship is dragged off-screen)
+    // if clientX/clientY are out of the window, then elementFromPoint returns null
+    const maxPageX = window.innerWidth - (shipLengths[shipsPlaced] - 1) * 35;
+    const maxPageY = window.innerHeight - (shipLengths[shipsPlaced] - 1) * 35;
+    // console.log("X: " + maxPageX + ", Y: " + maxPageY);
+
+    if (!elemBelow) return;
+
+    if (!shipImgs[shipsPlaced].style.rotate && event.pageX >= maxPageX) {
+      isDropValid = false;
+      return;
+    } else if (shipImgs[shipsPlaced].style.rotate && event.pageY >= maxPageY) {
+      isDropValid = false;
+      return;
+    }
+
+    // console.log(window.innerWidth);
+    // console.log(window.innerHeight);
+    console.log(event.pageX, event.pageY);
+
     // BEGIN ---- checks validity of the drop
     let arrayOfElementsBelowToCheckValidity = [];
     arrayOfElementsBelowToCheckValidity.shift();
@@ -140,9 +160,9 @@ function beginShipPlacement(event) {
 
     shipImgs[shipsPlaced].hidden = false;
 
-    // mousemove events may trigger out of the window (when the ship is dragged off-screen)
-    // if clientX/clientY are out of the window, then elementFromPoint returns null
-    if (!elemBelow) return;
+    // // mousemove events may trigger out of the window (when the ship is dragged off-screen)
+    // // if clientX/clientY are out of the window, then elementFromPoint returns null
+    // if (!elemBelow) return;
 
     // potential droppables are labeled with the class "droppable" (can be other logic)
     droppableBelow = elemBelow.closest(".cpuSquare");
