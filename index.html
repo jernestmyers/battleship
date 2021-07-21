@@ -14,9 +14,16 @@
     </header>
     <main>
       <div id="place-ships-container">
-        <div id="randomize-player-fleet">
-          <p id="randomize-text">randomly place all ships</p>
+        <div class="place-ships-btns" id="randomize-player-fleet">
+          <p>randomly place all ships</p>
         </div>
+        <div class="place-ships-btns" id="start-game-btn">
+          <p>start game</p>
+        </div>
+        <div class="place-ships-btns" id="clear-board-btn">
+          <p>clear board</p>
+        </div>
+
         <div id="btn-rotate-ship">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +72,7 @@
         <h2>You</h2>
       </div>
       <div id="cpu-board">
-        <h2>Computer</h2>
+        <h2 id="cpu-board-header"></h2>
         <div
           class="ships-rendered player-ships-container"
           id="carrier-container"
