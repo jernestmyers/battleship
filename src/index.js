@@ -1,7 +1,7 @@
 import { createPlayerObjects } from "./gameHandler";
-import { renderPlayerShips } from "./renderGame";
+import { renderPlayerShips, clearBoards } from "./renderGame";
 
-const playerFleet = [];
+let playerFleet = [];
 
 const shipNames = [
   `Carrier`,
@@ -11,17 +11,21 @@ const shipNames = [
   `Patrol Boat`,
 ];
 const shipLengths = [5, 4, 3, 3, 2];
-let shipsPlaced = 0;
+// let shipsPlaced = playerFleet.length;
 let shipCoords = [];
 
 const cpuGameBoardTitle = document.querySelector(`#cpu-board-header`);
 const cpuBoardSquares = document.querySelectorAll(`.cpuSquare`);
+
 const rotateBtn = document.querySelector(`#btn-rotate-ship`);
+const clearBtn = document.querySelector(`#clear-board-btn`);
+const randomizeBtn = document.querySelector(`#randomize-player-fleet`);
+
 const placeShipsContainer = document.querySelector(`#place-ships-container`);
 const playerShipContainers = document.querySelectorAll(
   `.player-ships-container`
 );
-const shipImgs = document.querySelectorAll(`.ships-to-place`);
+let shipImgs = document.querySelectorAll(`.ships-to-place`);
 
 function hideShipsToPlace() {
   shipImgs.forEach((ship) => {
@@ -31,11 +35,26 @@ function hideShipsToPlace() {
 }
 
 // hides all but the carrier on page load
-shipImgs.forEach((ship, index) => {
-  if (index !== 0) {
-    ship.classList.add(`hide-ship`);
-  }
-});
+function setUpShipsToDragAndDrop() {
+  playerFleet = [];
+  shipImgs = document.querySelectorAll(`.ships-to-place`);
+  shipImgs.forEach((ship, index) => {
+    // console.log(ship);
+    ship.addEventListener(`mousedown`, beginShipPlacement);
+    if (index !== 0) {
+      // console.log(ship);
+      ship.classList.add(`hide-ship`);
+    }
+    ship.addEventListener(`mousedown`, beginShipPlacement);
+    ship.style.cursor = `grab`;
+    ship.ondragstart = function () {
+      return false;
+    };
+  });
+  randomizeBtn.style.display = `flex`;
+  clearBtn.style.display = `none`;
+}
+setUpShipsToDragAndDrop();
 
 // labels the computer gameboard on page load
 cpuGameBoardTitle.textContent = `PLACE YOUR SHIPS`;
@@ -49,8 +68,8 @@ function beginGame() {
   cpuGameBoardTitle.textContent = `Computer`;
   playerBoard.style.display = `block`;
   placeShipsContainer.style.display = `none`;
-  if (shipsPlaced === 5) {
-    console.log(`create objects`);
+  if (playerFleet.length === 5) {
+    // console.log(`create objects`);
     createPlayerObjects(playerFleet);
     cpuBoardSquares.forEach((square) => {
       square.style.backgroundColor = ``;
@@ -58,57 +77,61 @@ function beginGame() {
   }
 }
 
+clearBtn.addEventListener(`click`, clearBoards);
+
 rotateBtn.addEventListener(`click`, rotateShip);
 
 function rotateShip(e) {
-  if (!shipImgs[shipsPlaced].style.rotate) {
-    shipImgs[shipsPlaced].style.rotate = `-90deg`;
-    shipImgs[shipsPlaced].style.top =
-      100 + ((shipLengths[shipsPlaced] - 1) / 2) * 35 + `px`;
+  if (!shipImgs[playerFleet.length].style.rotate) {
+    shipImgs[playerFleet.length].style.rotate = `-90deg`;
+    shipImgs[playerFleet.length].style.top =
+      100 + ((shipLengths[playerFleet.length] - 1) / 2) * 35 + `px`;
   } else {
-    shipImgs[shipsPlaced].style.rotate = ``;
-    shipImgs[shipsPlaced].style.top = 100 + `px`;
+    shipImgs[playerFleet.length].style.rotate = ``;
+    shipImgs[playerFleet.length].style.top = 100 + `px`;
   }
 }
 
-shipImgs.forEach((ship) => {
-  ship.addEventListener(`mousedown`, beginShipPlacement);
-  ship.style.cursor = `grab`;
-  ship.ondragstart = function () {
-    return false;
-  };
-});
+// shipImgs.forEach((ship) => {
+//   ship.addEventListener(`mousedown`, beginShipPlacement);
+//   ship.style.cursor = `grab`;
+//   ship.ondragstart = function () {
+//     return false;
+//   };
+// });
 
 function beginShipPlacement(event) {
   // (1) prepare to move element: make absolute and on top by z-index
-  shipImgs[shipsPlaced].style.position = "absolute";
-  shipImgs[shipsPlaced].style.zIndex = 1000;
+  shipImgs[playerFleet.length].style.position = "absolute";
+  shipImgs[playerFleet.length].style.zIndex = 1000;
 
   // move it out of any current parents directly into cpuBoard
-  playerShipContainers[shipsPlaced].append(shipImgs[shipsPlaced]);
+  playerShipContainers[playerFleet.length].append(shipImgs[playerFleet.length]);
 
   // centers the cursor in the first "square" of the ship image
   function moveAt(pageX, pageY) {
-    if (!shipImgs[shipsPlaced].style.rotate) {
-      shipImgs[shipsPlaced].style.left =
+    if (!shipImgs[playerFleet.length].style.rotate) {
+      shipImgs[playerFleet.length].style.left =
         pageX -
-        (playerShipContainers[shipsPlaced].getBoundingClientRect().x + 17.5) +
+        (playerShipContainers[playerFleet.length].getBoundingClientRect().x +
+          17.5) +
         "px";
-      shipImgs[shipsPlaced].style.top =
+      shipImgs[playerFleet.length].style.top =
         pageY -
-        (playerShipContainers[shipsPlaced].getBoundingClientRect().y + 17.5) +
+        (playerShipContainers[playerFleet.length].getBoundingClientRect().y +
+          17.5) +
         "px";
     } else {
-      shipImgs[shipsPlaced].style.left =
+      shipImgs[playerFleet.length].style.left =
         pageX -
-        (playerShipContainers[shipsPlaced].getBoundingClientRect().x +
-          ((shipLengths[shipsPlaced] - 1) / 2) * 35) -
+        (playerShipContainers[playerFleet.length].getBoundingClientRect().x +
+          ((shipLengths[playerFleet.length] - 1) / 2) * 35) -
         17.5 +
         "px";
-      shipImgs[shipsPlaced].style.top =
+      shipImgs[playerFleet.length].style.top =
         pageY -
-        (playerShipContainers[shipsPlaced].getBoundingClientRect().y -
-          ((shipLengths[shipsPlaced] - 1) / 2) * 35) -
+        (playerShipContainers[playerFleet.length].getBoundingClientRect().y -
+          ((shipLengths[playerFleet.length] - 1) / 2) * 35) -
         17.5 +
         "px";
     }
@@ -124,21 +147,21 @@ function beginShipPlacement(event) {
 
   function onMouseMove(event) {
     moveAt(event.pageX, event.pageY);
-    shipImgs[shipsPlaced].hidden = true;
+    shipImgs[playerFleet.length].hidden = true;
     let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
 
     // mousemove events may trigger out of the window (when the ship is dragged off-screen)
     // if clientX/clientY are out of the window, then elementFromPoint returns null
-    // const maxPageX = window.innerWidth - (shipLengths[shipsPlaced] - 1) * 35;
-    // const maxPageY = window.innerHeight - (shipLengths[shipsPlaced] - 1) * 35;
+    // const maxPageX = window.innerWidth - (shipLengths[playerFleet.length] - 1) * 35;
+    // const maxPageY = window.innerHeight - (shipLengths[playerFleet.length] - 1) * 35;
     // console.log("X: " + maxPageX + ", Y: " + maxPageY);
 
     if (!elemBelow) return;
 
-    // if (!shipImgs[shipsPlaced].style.rotate && event.pageX >= maxPageX) {
+    // if (!shipImgs[playerFleet.length].style.rotate && event.pageX >= maxPageX) {
     //   isDropValid = false;
     //   return;
-    // } else if (shipImgs[shipsPlaced].style.rotate && event.pageY >= maxPageY) {
+    // } else if (shipImgs[playerFleet.length].style.rotate && event.pageY >= maxPageY) {
     //   isDropValid = false;
     //   return;
     // }
@@ -150,9 +173,9 @@ function beginShipPlacement(event) {
     // BEGIN ---- checks validity of the drop
     let arrayOfElementsBelowToCheckValidity = [];
     arrayOfElementsBelowToCheckValidity.shift();
-    for (let i = 0; i < shipLengths[shipsPlaced]; i++) {
+    for (let i = 0; i < shipLengths[playerFleet.length]; i++) {
       let getClassToCheckValidity;
-      if (shipImgs[shipsPlaced].style.rotate) {
+      if (shipImgs[playerFleet.length].style.rotate) {
         getClassToCheckValidity = document
           .elementFromPoint(event.clientX, event.clientY + i * 35)
           .getAttribute(`class`);
@@ -180,7 +203,7 @@ function beginShipPlacement(event) {
     // console.log(arrayOfElementsBelowToCheckValidity);
     // END ---- checks validity of the drop
 
-    shipImgs[shipsPlaced].hidden = false;
+    shipImgs[playerFleet.length].hidden = false;
 
     // // mousemove events may trigger out of the window (when the ship is dragged off-screen)
     // // if clientX/clientY are out of the window, then elementFromPoint returns null
@@ -191,9 +214,9 @@ function beginShipPlacement(event) {
     // console.log(droppableBelow);
 
     if (!droppableBelow || !isDropValid) {
-      shipImgs[shipsPlaced].style.cursor = `no-drop`;
+      shipImgs[playerFleet.length].style.cursor = `no-drop`;
     } else {
-      shipImgs[shipsPlaced].style.cursor = `grabbing`;
+      shipImgs[playerFleet.length].style.cursor = `grabbing`;
     }
 
     if (currentDroppable != droppableBelow) {
@@ -224,12 +247,12 @@ function beginShipPlacement(event) {
       Math.floor(indexOfInitialDropPoint / 10) * 10 +
       90;
     if (
-      !shipImgs[shipsPlaced].style.rotate &&
-      indexOfInitialDropPoint + (shipLengths[shipsPlaced] - 1) <
+      !shipImgs[playerFleet.length].style.rotate &&
+      indexOfInitialDropPoint + (shipLengths[playerFleet.length] - 1) <
         maxHorizontal &&
       isDropValid
     ) {
-      for (let i = 0; i < shipLengths[shipsPlaced]; i++) {
+      for (let i = 0; i < shipLengths[playerFleet.length]; i++) {
         if (cpuBoardSquares[indexOfInitialDropPoint + i]) {
           cpuBoardSquares[indexOfInitialDropPoint + i].style.backgroundColor =
             "#829E76";
@@ -237,12 +260,12 @@ function beginShipPlacement(event) {
         }
       }
     } else if (
-      shipImgs[shipsPlaced].style.rotate &&
-      indexOfInitialDropPoint + (shipLengths[shipsPlaced] - 1) * 10 <=
+      shipImgs[playerFleet.length].style.rotate &&
+      indexOfInitialDropPoint + (shipLengths[playerFleet.length] - 1) * 10 <=
         maxVertical &&
       isDropValid
     ) {
-      for (let i = 0; i < shipLengths[shipsPlaced]; i++) {
+      for (let i = 0; i < shipLengths[playerFleet.length]; i++) {
         if (cpuBoardSquares[indexOfInitialDropPoint + i * 10]) {
           cpuBoardSquares[
             indexOfInitialDropPoint + i * 10
@@ -251,7 +274,6 @@ function beginShipPlacement(event) {
         }
       }
     } else {
-      console.log(`here`);
       droppableBelow = null;
       shipCoords = [];
     }
@@ -261,15 +283,15 @@ function beginShipPlacement(event) {
   function leaveDroppableArea(element) {
     shipCoords = [];
     const indexOfInitialDropPoint = +element.dataset.indexNumber;
-    if (!shipImgs[shipsPlaced].style.rotate) {
-      for (let i = 0; i < shipLengths[shipsPlaced]; i++) {
+    if (!shipImgs[playerFleet.length].style.rotate) {
+      for (let i = 0; i < shipLengths[playerFleet.length]; i++) {
         if (cpuBoardSquares[indexOfInitialDropPoint + i]) {
           cpuBoardSquares[indexOfInitialDropPoint + i].style.backgroundColor =
             "#c1c1c1";
         }
       }
     } else {
-      for (let i = 0; i < shipLengths[shipsPlaced]; i++) {
+      for (let i = 0; i < shipLengths[playerFleet.length]; i++) {
         if (cpuBoardSquares[indexOfInitialDropPoint + i * 10]) {
           cpuBoardSquares[
             indexOfInitialDropPoint + i * 10
@@ -283,17 +305,20 @@ function beginShipPlacement(event) {
   document.addEventListener("mousemove", onMouseMove);
 
   // (3) drop the ship, remove unneeded handlers
-  shipImgs[shipsPlaced].onmouseup = function () {
+  shipImgs[playerFleet.length].onmouseup = function () {
+    console.log(playerFleet.length);
+    console.log(playerFleet.length);
     document.removeEventListener("mousemove", onMouseMove);
-    shipImgs[shipsPlaced].onmouseup = null;
-    // console.log(shipCoords);
+    shipImgs[playerFleet.length].onmouseup = null;
     if (shipCoords.length !== 0 && droppableBelow && isDropValid) {
       playerFleet.push({
-        name: shipNames[shipsPlaced],
+        name: shipNames[playerFleet.length],
         shipPlacement: shipCoords,
       });
-      playerShipContainers[shipsPlaced].removeChild(shipImgs[shipsPlaced]);
-      renderPlayerShips([playerFleet[shipsPlaced]]);
+      playerShipContainers[playerFleet.length - 1].removeChild(
+        shipImgs[playerFleet.length - 1]
+      );
+      renderPlayerShips([playerFleet[playerFleet.length - 1]]);
       cpuBoardSquares.forEach((square) => {
         square.style.backgroundColor = `#c1c1c1`;
       });
@@ -302,33 +327,34 @@ function beginShipPlacement(event) {
           ship.classList.remove(`hide-ship`);
         }
       });
-      shipsPlaced += 1;
-      const clearBtn = document.querySelector(`#clear-board-btn`);
-      if (shipsPlaced === 1) {
-        const randomizeBtn = document.querySelector(`#randomize-player-fleet`);
+      console.log(playerFleet.length);
+      console.log(playerFleet.length);
+      // playerFleet.length += 1;
+      // const clearBtn = document.querySelector(`#clear-board-btn`);
+      if (playerFleet.length === 1) {
         randomizeBtn.style.display = `none `;
         clearBtn.style.display = "flex";
       }
-      if (shipsPlaced === 5) {
+      if (playerFleet.length === 5) {
         startBtn.style.display = "flex";
         clearBtn.style.display = `none`;
         rotateBtn.style.display = `none`;
       }
     } else {
       placeShipsContainer.insertBefore(
-        shipImgs[shipsPlaced],
-        shipImgs[shipsPlaced + 1]
+        shipImgs[playerFleet.length],
+        shipImgs[playerFleet.length + 1]
       );
-      if (shipImgs[shipsPlaced].style.rotate) {
-        shipImgs[shipsPlaced].style.rotate = ``;
+      if (shipImgs[playerFleet.length].style.rotate) {
+        shipImgs[playerFleet.length].style.rotate = ``;
       }
-      shipImgs[shipsPlaced].style.position = "absolute";
-      shipImgs[shipsPlaced].style.top = "100px";
-      shipImgs[shipsPlaced].style.left = "0px";
-      shipImgs[shipsPlaced].style.zIndex = 0;
-      shipImgs[shipsPlaced].style.cursor = `grab`;
+      shipImgs[playerFleet.length].style.position = "absolute";
+      shipImgs[playerFleet.length].style.top = "100px";
+      shipImgs[playerFleet.length].style.left = "0px";
+      shipImgs[playerFleet.length].style.zIndex = 0;
+      shipImgs[playerFleet.length].style.cursor = `grab`;
     }
   };
 }
 
-export { hideShipsToPlace };
+export { hideShipsToPlace, setUpShipsToDragAndDrop, beginShipPlacement };

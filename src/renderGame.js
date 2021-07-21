@@ -1,13 +1,15 @@
-import { gameLoop } from "./gameHandler";
+import { gameLoop, handleState } from "./gameHandler";
+import { setUpShipsToDragAndDrop, beginShipPlacement } from "./index";
 
 function renderGameboard(user) {
   let boardDiv;
+  const board = document.createElement(`div`);
   if (user === `player`) {
     boardDiv = document.querySelector(`#player-board`);
+    board.setAttribute(`id`, `player-squares-container`);
   } else {
     boardDiv = document.querySelector(`#cpu-board`);
   }
-  const board = document.createElement(`div`);
   board.classList.add(`gameboard`);
   const maxSquares = 100;
   for (let i = 0; i < maxSquares; i++) {
@@ -31,7 +33,6 @@ const playerAttack = (e) => {
   e.target.removeEventListener(`click`, playerAttack);
 };
 
-// renderGameboard(`player`);
 renderGameboard(`cpu`);
 
 function deregisterRemainingEventListneners(array) {
@@ -113,9 +114,6 @@ function renderComputerShips(cpuFleet) {
 }
 
 function renderPlayerShips(fleet) {
-  // console.log(!fleet[0].shipPlacement);
-  // console.log(fleet[0].shipPlacement);
-  // console.log(fleet[0].shipPlacement[0] === undefined);
   if (fleet[0].shipPlacement[0] === undefined) {
     return;
   }
@@ -174,9 +172,59 @@ function renderPlayerShips(fleet) {
   });
 }
 
+function clearBoards() {
+  const playerBoard = document.querySelector(`#player-board`);
+  const playerSquares = document.querySelector(`#player-squares-container`);
+  const cpuBoard = document.querySelector(`#cpu-board`);
+  const placeShipsContainer = document.querySelector(`#place-ships-container`);
+  const shipsOnCPUBoard = document.querySelectorAll(`.player-ships-rendered`);
+  const shipsOnPlayerBoard = document.querySelectorAll(`.cpu-ships-rendered`);
+  const remainingShipsToPlace = document.querySelectorAll(`.ships-to-place`);
+
+  playerBoard.removeChild(playerSquares);
+  removeElements(cpuBoard, shipsOnCPUBoard);
+  removeElements(playerBoard, shipsOnPlayerBoard);
+  // removeElements(playerBoard, playerSquares);
+  removeElements(placeShipsContainer, remainingShipsToPlace);
+  redisplayShipsToPlace(placeShipsContainer);
+  setUpShipsToDragAndDrop();
+  handleState();
+}
+
+function removeElements(parent, children) {
+  if (children) {
+    for (let i = 0; i < children.length; i++) {
+      parent.removeChild(children[i]);
+    }
+  } else {
+    while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+    }
+  }
+}
+
+function redisplayShipsToPlace(parent) {
+  const nameHelper = [
+    `carrier`,
+    `battleship`,
+    `destroyer`,
+    `submarine`,
+    `patrol`,
+  ];
+  nameHelper.forEach((ship) => {
+    const shipImage = document.createElement(`img`);
+    shipImage.src = `./imgs/${ship}.png`;
+    shipImage.classList.add(`${ship}`);
+    shipImage.classList.add(`ships-to-place`);
+    shipImage.setAttribute(`id`, `player-${ship}`);
+    parent.appendChild(shipImage);
+  });
+}
+
 export {
   deregisterRemainingEventListneners,
   renderMove,
   renderComputerShips,
   renderPlayerShips,
+  clearBoards,
 };

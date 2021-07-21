@@ -1,9 +1,5 @@
 import { Gameboard, placeComputerFleet, receiveAttack } from "./gameboard";
-import {
-  renderMove,
-  deregisterRemainingEventListneners,
-  renderPlayerShips,
-} from "./renderGame";
+import { renderMove, deregisterRemainingEventListneners } from "./renderGame";
 import { hideShipsToPlace } from "./index.js";
 
 const storedGameboards = [];
@@ -53,10 +49,21 @@ function createPlayerObjects(fleet) {
   console.log(storedGameboards);
 }
 
-const cpuFleetArray = [];
-const computerFleet = placeComputerFleet(`cpu`, cpuFleetArray);
-const computerBoard = Gameboard(computerFleet);
-storedGameboards.push([`player`, computerBoard]);
+function createComputerObjects() {
+  const cpuFleetArray = [];
+  const computerFleet = placeComputerFleet(`cpu`, cpuFleetArray);
+  const computerBoard = Gameboard(computerFleet);
+  storedGameboards.push([`player`, computerBoard]);
+}
+createComputerObjects();
+
+function handleState() {
+  if (storedGameboards.length === 2) {
+    storedGameboards.shift();
+  }
+  storedGameboards.shift();
+  createComputerObjects();
+}
 
 // BEGIN ----- generates random move for computer ----------- //
 function createValidMovesArray() {
@@ -133,4 +140,4 @@ function gameLoop(playerMove) {
   }
 }
 
-export { storedGameboards, gameLoop, createPlayerObjects };
+export { storedGameboards, gameLoop, createPlayerObjects, handleState };
