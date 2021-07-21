@@ -20,14 +20,6 @@ function turnDriver() {
   return whoseMove;
 }
 
-// // hard-coded instantiation of playerFleet
-// const playerFleet = [
-//   { name: "Carrier", shipPlacement: [1, 2, 3, 4, 5] },
-//   { name: "Battleship", shipPlacement: [10, 11, 12, 13] },
-//   { name: "Destroyer", shipPlacement: [77, 87, 97] },
-//   { name: "Submarine", shipPlacement: [40, 50, 60] },
-//   { name: "Patrol Boat", shipPlacement: [58, 59] },
-// ];
 const randomizePlayerFleetBtn = document.querySelector(
   `#randomize-player-fleet`
 );
@@ -46,14 +38,19 @@ function randomizePlayerFleet() {
     for (let i = 0; i < 5; i++) {
       cpuBoard.removeChild(renderedPlayerShips[i]);
     }
-    // console.log(storedGameboards);
   }
   const playerFleetArray = [];
   const playerFleet = placeComputerFleet(`user`, playerFleetArray);
-  const playerBoard = Gameboard(playerFleet);
+  createPlayerObjects(playerFleet);
+  // const playerBoard = Gameboard(playerFleet);
+  // storedGameboards.push([`computer`, playerBoard]);
+  // console.log(storedGameboards[0][1].ships.fleet);
+}
+
+function createPlayerObjects(fleet) {
+  const playerBoard = Gameboard(fleet);
   storedGameboards.push([`computer`, playerBoard]);
   console.log(storedGameboards);
-  console.log(storedGameboards[0][1].ships.fleet);
 }
 
 const cpuFleetArray = [];
@@ -102,6 +99,7 @@ function gameLoop(playerMove) {
       console.log(attackOutcome);
       renderMove(getTurn, attackOutcome);
       if (attackOutcome[0]) {
+        console.log(storedGameboards);
         storedGameboards.filter((item) => {
           if (item[0] === getTurn) {
             isGameOver = item[1].isGameOver();
@@ -113,7 +111,7 @@ function gameLoop(playerMove) {
         let arrayIndex;
         storedGameboards[0][1].ships.fleet.filter((object, index) => {
           if (attackOutcome[0] === object.name) {
-            console.log(`here with ` + object.name);
+            // console.log(`here with ` + object.name);
             isShipSunk = object.isSunk;
             arrayIndex = index;
             if (isShipSunk) {
@@ -122,8 +120,8 @@ function gameLoop(playerMove) {
               cpuHiddenShips[index].style.display = `block`;
               cpuHiddenShips[index].style.zIndex = `1`;
             }
-            console.log(isShipSunk);
-            console.log(arrayIndex);
+            // console.log(isShipSunk);
+            // console.log(arrayIndex);
           }
         });
       }
@@ -135,4 +133,4 @@ function gameLoop(playerMove) {
   }
 }
 
-export { storedGameboards, gameLoop };
+export { storedGameboards, gameLoop, createPlayerObjects };

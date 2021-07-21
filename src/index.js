@@ -1,4 +1,4 @@
-import "./gameHandler";
+import { createPlayerObjects } from "./gameHandler";
 import { renderPlayerShips } from "./renderGame";
 
 const playerFleet = [];
@@ -49,6 +49,13 @@ function beginGame() {
   cpuGameBoardTitle.textContent = `Computer`;
   playerBoard.style.display = `block`;
   placeShipsContainer.style.display = `none`;
+  if (shipsPlaced === 5) {
+    console.log(`create objects`);
+    createPlayerObjects(playerFleet);
+    cpuBoardSquares.forEach((square) => {
+      square.style.backgroundColor = ``;
+    });
+  }
 }
 
 rotateBtn.addEventListener(`click`, rotateShip);
