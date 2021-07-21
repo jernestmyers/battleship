@@ -11,7 +11,8 @@ body {
 }
 
 header {
-  margin: 0.5rem 0;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
   text-align: center;
 }
 
@@ -28,7 +29,6 @@ h2 {
 
 main {
   display: flex;
-  /* justify-content: space-around; */
   justify-content: center;
 }
 
@@ -73,7 +73,7 @@ main {
 }
 
 .cpu-ships-rendered {
-  /* z-index: 1; */
+  display: none;
 }
 
 img {
@@ -82,7 +82,7 @@ img {
 }
 
 #submarine-img {
-  /* display: none; */
+  display: none;
   width: 105px;
   top: 175px;
   left: -35px;
@@ -90,21 +90,21 @@ img {
 }
 
 #patrol-img {
-  /* display: none; */
+  display: none;
   width: 70px;
   top: 175px;
   left: 280px;
 }
 
 #carrier-img {
-  /* display: none; */
+  display: none;
   width: 175px;
   top: 0px;
   left: 35px;
 }
 
 #destroyer-img {
-  /* display: none; */
+  display: none;
   width: 105px;
   top: 280px;
   left: 210px;
@@ -112,7 +112,7 @@ img {
 }
 
 #battleship-img {
-  /* display: none; */
+  display: none;
   width: 140px;
   top: 35px;
   left: 0px;
@@ -156,7 +156,7 @@ img {
 
 .ships-to-place {
   align-self: flex-start;
-  top: 81px;
+  top: 100px;
 }
 
 #player-board {
@@ -186,17 +186,7 @@ img {
   font-size: 14px;
 }
 
-#btn-rotate-ship:hover,
-#randomize-player-fleet:hover {
-  background-color: #c1c1c1;
-}
-
-#btn-rotate-ship:active,
-#randomize-player-fleet:active {
-  background-color: #747474;
-}
-
-#randomize-player-fleet {
+.place-ships-btns {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -207,5 +197,20 @@ img {
   height: 40px;
   width: 175px;
   border-radius: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
+}
+
+#btn-rotate-ship:hover,
+.place-ships-btns:hover {
+  background-color: #c1c1c1;
+}
+
+#btn-rotate-ship:active,
+.place-ships-btns:active {
+  background-color: #747474;
+}
+
+#start-game-btn,
+#clear-board-btn {
+  display: none;
 }

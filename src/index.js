@@ -14,6 +14,7 @@ const shipLengths = [5, 4, 3, 3, 2];
 let shipsPlaced = 0;
 let shipCoords = [];
 
+const cpuGameBoardTitle = document.querySelector(`#cpu-board-header`);
 const cpuBoardSquares = document.querySelectorAll(`.cpuSquare`);
 const rotateBtn = document.querySelector(`#btn-rotate-ship`);
 const placeShipsContainer = document.querySelector(`#place-ships-container`);
@@ -36,16 +37,30 @@ shipImgs.forEach((ship, index) => {
   }
 });
 
+// labels the computer gameboard on page load
+cpuGameBoardTitle.textContent = `PLACE YOUR SHIPS`;
+
+// start game button
+const startBtn = document.querySelector(`#start-game-btn`);
+startBtn.addEventListener(`click`, beginGame);
+
+function beginGame() {
+  const playerBoard = document.querySelector(`#player-board`);
+  cpuGameBoardTitle.textContent = `Computer`;
+  playerBoard.style.display = `block`;
+  placeShipsContainer.style.display = `none`;
+}
+
 rotateBtn.addEventListener(`click`, rotateShip);
 
 function rotateShip(e) {
   if (!shipImgs[shipsPlaced].style.rotate) {
     shipImgs[shipsPlaced].style.rotate = `-90deg`;
     shipImgs[shipsPlaced].style.top =
-      81 + ((shipLengths[shipsPlaced] - 1) / 2) * 35 + `px`;
+      100 + ((shipLengths[shipsPlaced] - 1) / 2) * 35 + `px`;
   } else {
     shipImgs[shipsPlaced].style.rotate = ``;
-    shipImgs[shipsPlaced].style.top = 81 + `px`;
+    shipImgs[shipsPlaced].style.top = 100 + `px`;
   }
 }
 
@@ -107,23 +122,23 @@ function beginShipPlacement(event) {
 
     // mousemove events may trigger out of the window (when the ship is dragged off-screen)
     // if clientX/clientY are out of the window, then elementFromPoint returns null
-    const maxPageX = window.innerWidth - (shipLengths[shipsPlaced] - 1) * 35;
-    const maxPageY = window.innerHeight - (shipLengths[shipsPlaced] - 1) * 35;
+    // const maxPageX = window.innerWidth - (shipLengths[shipsPlaced] - 1) * 35;
+    // const maxPageY = window.innerHeight - (shipLengths[shipsPlaced] - 1) * 35;
     // console.log("X: " + maxPageX + ", Y: " + maxPageY);
 
     if (!elemBelow) return;
 
-    if (!shipImgs[shipsPlaced].style.rotate && event.pageX >= maxPageX) {
-      isDropValid = false;
-      return;
-    } else if (shipImgs[shipsPlaced].style.rotate && event.pageY >= maxPageY) {
-      isDropValid = false;
-      return;
-    }
+    // if (!shipImgs[shipsPlaced].style.rotate && event.pageX >= maxPageX) {
+    //   isDropValid = false;
+    //   return;
+    // } else if (shipImgs[shipsPlaced].style.rotate && event.pageY >= maxPageY) {
+    //   isDropValid = false;
+    //   return;
+    // }
 
     // console.log(window.innerWidth);
     // console.log(window.innerHeight);
-    console.log(event.pageX, event.pageY);
+    // console.log(event.pageX, event.pageY);
 
     // BEGIN ---- checks validity of the drop
     let arrayOfElementsBelowToCheckValidity = [];
@@ -264,7 +279,7 @@ function beginShipPlacement(event) {
   shipImgs[shipsPlaced].onmouseup = function () {
     document.removeEventListener("mousemove", onMouseMove);
     shipImgs[shipsPlaced].onmouseup = null;
-    console.log(shipCoords);
+    // console.log(shipCoords);
     if (shipCoords.length !== 0 && droppableBelow && isDropValid) {
       playerFleet.push({
         name: shipNames[shipsPlaced],
@@ -281,7 +296,16 @@ function beginShipPlacement(event) {
         }
       });
       shipsPlaced += 1;
-      if (shipsPlaced !== 5) {
+      const clearBtn = document.querySelector(`#clear-board-btn`);
+      if (shipsPlaced === 1) {
+        const randomizeBtn = document.querySelector(`#randomize-player-fleet`);
+        randomizeBtn.style.display = `none `;
+        clearBtn.style.display = "flex";
+      }
+      if (shipsPlaced === 5) {
+        startBtn.style.display = "flex";
+        clearBtn.style.display = `none`;
+        rotateBtn.style.display = `none`;
       }
     } else {
       placeShipsContainer.insertBefore(
@@ -292,12 +316,11 @@ function beginShipPlacement(event) {
         shipImgs[shipsPlaced].style.rotate = ``;
       }
       shipImgs[shipsPlaced].style.position = "absolute";
-      shipImgs[shipsPlaced].style.top = "81px";
+      shipImgs[shipsPlaced].style.top = "100px";
       shipImgs[shipsPlaced].style.left = "0px";
       shipImgs[shipsPlaced].style.zIndex = 0;
       shipImgs[shipsPlaced].style.cursor = `grab`;
     }
-    rotateBtn.style.display = ``;
   };
 }
 
