@@ -15,7 +15,6 @@ function renderGameboard(user) {
   const maxSquares = 100;
   for (let i = 0; i < maxSquares; i++) {
     const square = document.createElement(`div`);
-    // square.textContent = i;
     square.dataset.indexNumber = i;
     if (user === `player`) {
       square.classList.add(`playerSquare`);

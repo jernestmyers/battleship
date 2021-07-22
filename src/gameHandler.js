@@ -53,30 +53,28 @@ function createComputerObjects() {
 }
 createComputerObjects();
 
-const validMoves = [];
+let getValidMoves = createValidMovesArray();
+let getPlayerMovesRemaining = createValidMovesArray();
+
 function handleState() {
   if (storedGameboards.length === 2) {
     storedGameboards.shift();
   }
   storedGameboards.shift();
-  for (let i = 0; i < validMoves.length; i++) {
-    validMoves.pop();
-  }
   createComputerObjects();
+  getValidMoves = createValidMovesArray();
+  getPlayerMovesRemaining = createValidMovesArray();
 }
 
 // BEGIN ----- generates random move for computer ----------- //
 function createValidMovesArray() {
-  // const validMoves = [];
+  const validMoves = [];
   const maxMoves = 100;
   for (let i = 0; i < maxMoves; i++) {
     validMoves.push(i);
   }
   return validMoves;
 }
-
-const getValidMoves = createValidMovesArray();
-const getPlayerMovesRemaining = createValidMovesArray();
 
 function generateComputerAttack() {
   const randomIndex = Math.floor(Math.random() * getValidMoves.length);
