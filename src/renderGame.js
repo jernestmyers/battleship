@@ -1,5 +1,5 @@
 import { gameLoop, handleState } from "./gameHandler";
-import { setUpShipsToDragAndDrop, beginShipPlacement } from "./index";
+import { setDragAndDrop } from "./dragAndDrop";
 
 function renderGameboard(user) {
   let boardDiv;
@@ -181,41 +181,18 @@ function clearBoards(e) {
   const shipsOnPlayerBoard = document.querySelectorAll(`.cpu-ships-rendered`);
   const remainingShipsToPlace = document.querySelectorAll(`.ships-to-place`);
 
+  const cpuBoardSquares = document.querySelectorAll(`.cpuSquare`);
+  cpuBoardSquares.forEach((square) => {
+    square.style.backgroundColor = ``;
+  });
+
   playerBoard.removeChild(playerSquares);
   removeElements(cpuBoard, shipsOnCPUBoard);
   removeElements(playerBoard, shipsOnPlayerBoard);
   removeElements(placeShipsContainer, remainingShipsToPlace);
   redisplayShipsToPlace(placeShipsContainer);
-  setUpShipsToDragAndDrop();
+  setDragAndDrop.setUpShipsToDragAndDrop();
   handleState();
-  if (e.target.closest(`div`).id !== `clear-board-btn`) {
-    startNewGame(playerBoard, placeShipsContainer, cpuBoard);
-  }
-}
-
-function startNewGame(hidePlayerBoard, displayContainer, cpuParent) {
-  const rotateBtn = document.querySelector(`#btn-rotate-ship`);
-  rotateBtn.style.display = `flex`;
-  document.querySelector(`#game-over-modal`).style.display = `none`;
-  hidePlayerBoard.style.display = `none`;
-  displayContainer.style.display = `flex`;
-  document.querySelector(`#cpu-board-header`).textContent = `PLACE YOUR SHIPS`;
-  const buttons = document.querySelectorAll(`.place-ships-btns`);
-  for (let i = 0; i < buttons.length; i++) {
-    if (i === 0) {
-      buttons[i].style.display = "flex";
-    } else if (i === buttons.length - 1) {
-      break;
-    } else {
-      buttons[i].style.display = "none";
-    }
-  }
-  const cpuBoardSquares = document.querySelectorAll(`.cpuSquare`);
-  cpuBoardSquares.forEach((square) => {
-    square.style.backgroundColor = ``;
-  });
-  cpuParent.removeChild(document.querySelector(`#cpu-squares-container`));
-  renderGameboard(`cpu`);
 }
 
 function removeElements(parent, children) {
@@ -254,5 +231,4 @@ export {
   renderComputerShips,
   renderPlayerShips,
   clearBoards,
-  startNewGame,
 };

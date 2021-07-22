@@ -1,6 +1,6 @@
 import { Gameboard, placeComputerFleet, receiveAttack } from "./gameboard";
 import { renderMove, deregisterRemainingEventListneners } from "./renderGame";
-import { hideShipsToPlace } from "./index.js";
+import { setDragAndDrop } from "./dragAndDrop";
 
 const storedGameboards = [];
 
@@ -22,7 +22,7 @@ const randomizePlayerFleetBtn = document.querySelector(
 randomizePlayerFleetBtn.addEventListener(`click`, randomizePlayerFleet);
 
 function randomizePlayerFleet() {
-  hideShipsToPlace();
+  setDragAndDrop.hideShipsToPlace();
   const startBtn = document.querySelector(`#start-game-btn`);
   startBtn.style.display = "flex";
   if (storedGameboards[1]) {
