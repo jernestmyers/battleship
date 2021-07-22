@@ -38,15 +38,11 @@ function randomizePlayerFleet() {
   const playerFleetArray = [];
   const playerFleet = placeComputerFleet(`user`, playerFleetArray);
   createPlayerObjects(playerFleet);
-  // const playerBoard = Gameboard(playerFleet);
-  // storedGameboards.push([`computer`, playerBoard]);
-  // console.log(storedGameboards[0][1].ships.fleet);
 }
 
 function createPlayerObjects(fleet) {
   const playerBoard = Gameboard(fleet);
   storedGameboards.push([`computer`, playerBoard]);
-  console.log(storedGameboards);
 }
 
 function createComputerObjects() {
@@ -57,17 +53,21 @@ function createComputerObjects() {
 }
 createComputerObjects();
 
+const validMoves = [];
 function handleState() {
   if (storedGameboards.length === 2) {
     storedGameboards.shift();
   }
   storedGameboards.shift();
+  for (let i = 0; i < validMoves.length; i++) {
+    validMoves.pop();
+  }
   createComputerObjects();
 }
 
 // BEGIN ----- generates random move for computer ----------- //
 function createValidMovesArray() {
-  const validMoves = [];
+  // const validMoves = [];
   const maxMoves = 100;
   for (let i = 0; i < maxMoves; i++) {
     validMoves.push(i);
@@ -118,7 +118,6 @@ function gameLoop(playerMove) {
         let arrayIndex;
         storedGameboards[0][1].ships.fleet.filter((object, index) => {
           if (attackOutcome[0] === object.name) {
-            // console.log(`here with ` + object.name);
             isShipSunk = object.isSunk;
             arrayIndex = index;
             if (isShipSunk) {
@@ -127,14 +126,19 @@ function gameLoop(playerMove) {
               cpuHiddenShips[index].style.display = `block`;
               cpuHiddenShips[index].style.zIndex = `1`;
             }
-            // console.log(isShipSunk);
-            // console.log(arrayIndex);
           }
         });
       }
       if (isGameOver) {
+        const gameOverModal = document.querySelector(`#game-over-modal`);
+        const displayWinnerText = document.querySelector(`#display-winner`);
         deregisterRemainingEventListneners(getPlayerMovesRemaining);
-        alert(`game over! ${getTurn} wins!`);
+        if (getTurn === `player`) {
+          displayWinnerText.textContent = `You win!`;
+        } else {
+          displayWinnerText.textContent = `You lose!`;
+        }
+        gameOverModal.style.display = "block";
       }
     }
   }

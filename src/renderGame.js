@@ -9,6 +9,7 @@ function renderGameboard(user) {
     board.setAttribute(`id`, `player-squares-container`);
   } else {
     boardDiv = document.querySelector(`#cpu-board`);
+    board.setAttribute(`id`, `cpu-squares-container`);
   }
   board.classList.add(`gameboard`);
   const maxSquares = 100;
@@ -172,7 +173,7 @@ function renderPlayerShips(fleet) {
   });
 }
 
-function clearBoards() {
+function clearBoards(e) {
   const playerBoard = document.querySelector(`#player-board`);
   const playerSquares = document.querySelector(`#player-squares-container`);
   const cpuBoard = document.querySelector(`#cpu-board`);
@@ -184,11 +185,38 @@ function clearBoards() {
   playerBoard.removeChild(playerSquares);
   removeElements(cpuBoard, shipsOnCPUBoard);
   removeElements(playerBoard, shipsOnPlayerBoard);
-  // removeElements(playerBoard, playerSquares);
   removeElements(placeShipsContainer, remainingShipsToPlace);
   redisplayShipsToPlace(placeShipsContainer);
   setUpShipsToDragAndDrop();
   handleState();
+  if (e.target.closest(`div`).id !== `clear-board-btn`) {
+    startNewGame(playerBoard, placeShipsContainer, cpuBoard);
+  }
+}
+
+function startNewGame(hidePlayerBoard, displayContainer, cpuParent) {
+  const rotateBtn = document.querySelector(`#btn-rotate-ship`);
+  rotateBtn.style.display = `flex`;
+  document.querySelector(`#game-over-modal`).style.display = `none`;
+  hidePlayerBoard.style.display = `none`;
+  displayContainer.style.display = `flex`;
+  document.querySelector(`#cpu-board-header`).textContent = `PLACE YOUR SHIPS`;
+  const buttons = document.querySelectorAll(`.place-ships-btns`);
+  for (let i = 0; i < buttons.length; i++) {
+    if (i === 0) {
+      buttons[i].style.display = "flex";
+    } else if (i === buttons.length - 1) {
+      break;
+    } else {
+      buttons[i].style.display = "none";
+    }
+  }
+  const cpuBoardSquares = document.querySelectorAll(`.cpuSquare`);
+  cpuBoardSquares.forEach((square) => {
+    square.style.backgroundColor = ``;
+  });
+  cpuParent.removeChild(document.querySelector(`#cpu-squares-container`));
+  renderGameboard(`cpu`);
 }
 
 function removeElements(parent, children) {
@@ -227,4 +255,5 @@ export {
   renderComputerShips,
   renderPlayerShips,
   clearBoards,
+  startNewGame,
 };
