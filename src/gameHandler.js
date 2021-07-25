@@ -82,15 +82,18 @@ function createValidMovesArray() {
 //   getValidMoves.splice(randomIndex, 1);
 //   return randomMove;
 // }
+
 let isAITriggered = false;
-let initialCPUHitArray = [];
+let initialCPUHitObject;
+let validSmartMoves;
 
 function getValidAdjacentCPUMoves(initialHit) {
   console.log(initialHit);
-  getMovesRight(initialHit);
-  getMovesLeft(initialHit);
-  getMovesDown(initialHit);
-  getMovesUp(initialHit);
+  const validMovesRight = getMovesRight(initialHit);
+  const validMovesLeft = getMovesLeft(initialHit);
+  const validMovesDown = getMovesDown(initialHit);
+  const validMovesUp = getMovesUp(initialHit);
+  return { validMovesRight, validMovesLeft, validMovesDown, validMovesUp };
 }
 
 function getMovesRight(hit) {
@@ -101,7 +104,8 @@ function getMovesRight(hit) {
     }
   });
   movesRight.shift();
-  console.log({ movesRight });
+  // console.log({ movesRight });
+  return movesRight;
 }
 
 function getMovesLeft(hit) {
@@ -116,7 +120,8 @@ function getMovesLeft(hit) {
       movesLeft.push(item);
     }
   });
-  console.log({ movesLeft });
+  // console.log({ movesLeft });
+  return movesLeft;
 }
 
 function getMovesDown(hit) {
@@ -136,7 +141,8 @@ function getMovesDown(hit) {
       }
     });
   movesDown.shift();
-  console.log({ movesDown });
+  // console.log({ movesDown });
+  return movesDown;
 }
 
 function getMovesUp(hit) {
@@ -146,7 +152,6 @@ function getMovesUp(hit) {
     }
   });
   verticalMoves.reverse();
-
   const movesUp = verticalMoves
     .slice(verticalMoves.indexOf(hit))
     .filter((coord, index) => {
@@ -162,7 +167,8 @@ function getMovesUp(hit) {
     movesUp.push(0);
   }
   movesUp.shift();
-  console.log({ movesUp });
+  // console.log({ movesUp });
+  return movesUp;
 }
 
 function generateComputerAttack() {
@@ -173,29 +179,109 @@ function generateComputerAttack() {
     // getValidMoves.splice(randomIndex, 1);
   } else {
     console.log(`begin smart move`);
-    // console.log(initialCPUHitArray);
-    // cpuMove = getSmartCPUMove();
+    cpuMove = getSmartCPUMove();
     // getValidMoves.splice(getValidMoves.indexOf(cpuMove), 1);
   }
   return cpuMove;
 }
 
-// let isVert;
 // let areShipsAdjacent;
-// function getSmartCPUMove() {
-//   if (
-//     getValidMoves.includes(initialCPUHitArray[1] + 1) &&
-//     initialCPUHitArray[1] + 1 <
-//       (Math.floor(initialCPUHitArray[1] / 10) + 1) * 10
-//   ) {
-//     return initialCPUHitArray[1] + 1;
-//   } else if (
-//     getValidMoves.includes(initialCPUHitArray[1] - 1) &&
-//     initialCPUHitArray[1] - 1 > Math.floor(initialCPUHitArray[1] / 10) * 10
-//   ) {
-//     return initialCPUHitArray[1] - 1;
-//   }
-// }
+let isAHit = true;
+let hitsCounter = 0;
+let smartMovesCounter = 0;
+let numberOfShipsSunkByAI = 0;
+let sunkShipsChecker = 0;
+let isInitialShipSunk = false;
+let isVertical = false;
+let isRight = true;
+let isLeft = true;
+let isDown = true;
+
+function getSmartCPUMove() {
+  let move;
+  smartMovesCounter += 1;
+  if (isAHit) {
+    hitsCounter += 1;
+  }
+  if (
+    // first move is always right if array[0] is truthy
+    validSmartMoves.validMovesRight[0] &&
+    isAHit &&
+    hitsCounter === smartMovesCounter
+  ) {
+    move = validSmartMoves.validMovesRight[0];
+    validSmartMoves.validMovesRight.shift();
+  } else if (
+    (isRight &&
+      // first condition is if moveRight DNE upon entering AI bc hits === smartMoves
+      !validSmartMoves.validMovesRight[0] &&
+      hitsCounter === smartMovesCounter &&
+      validSmartMoves.validMovesLeft[0]) ||
+    // second condition is for the move immediately after moveRight misses, thus hits and moves differ by 1
+    (isRight &&
+      validSmartMoves.validMovesLeft[0] &&
+      !isAHit &&
+      hitsCounter === smartMovesCounter - 1) ||
+    // third condition is if VMR becomes falsy without sinking the ship by running up against right edge of gameboard
+    // in this case, hits will equal smartMoves and go left until VML is falsy or a miss is registered
+    (isRight &&
+      !validSmartMoves.validMovesRight[0] &&
+      validSmartMoves.validMovesLeft[0] &&
+      hitsCounter === smartMovesCounter)
+  ) {
+    move = validSmartMoves.validMovesLeft[0];
+    validSmartMoves.validMovesLeft.shift();
+    isRight = false;
+  } else if (
+    validSmartMoves.validMovesLeft[0] &&
+    isAHit &&
+    isLeft &&
+    !isVertical
+  ) {
+    // handles if one of the above "else if" conditions registers a hit but will not trigger once AI performs a move down
+    move = validSmartMoves.validMovesLeft[0];
+    validSmartMoves.validMovesLeft.shift();
+  } else if (
+    // handles the case in which there are no valid moves right or left upon entry into AI
+    !validSmartMoves.validMovesLeft[0] &&
+    !validSmartMoves.validMovesRight[0] &&
+    validSmartMoves.validMovesDown[0] &&
+    // hitsCounter === smartMovesCounter
+    isLeft &&
+    !isVertical
+  ) {
+    move = validSmartMoves.validMovesDown[0];
+    validSmartMoves.validMovesDown.shift();
+    isLeft = false;
+    isVertical = true;
+  } else if (validSmartMoves.validMovesDown[0] && !isAHit && !isVertical) {
+    // handles the first time a move is made down with the exception of the above else if, thus setting isVertical = true
+    move = validSmartMoves.validMovesDown[0];
+    validSmartMoves.validMovesDown.shift();
+    isLeft = false;
+    isVertical = true;
+  } else if (
+    validSmartMoves.validMovesDown[0] &&
+    isAHit &&
+    isDown &&
+    isVertical
+  ) {
+    move = validSmartMoves.validMovesDown[0];
+    validSmartMoves.validMovesDown.shift();
+  } else if (
+    validSmartMoves.validMovesUp[0]
+    // !isAHit
+    // isVertical
+  ) {
+    move = validSmartMoves.validMovesUp[0];
+    validSmartMoves.validMovesUp.shift();
+    isDown = false;
+  } else {
+    breakFromAILoop();
+    move = generateComputerAttack();
+  }
+  return move;
+}
 // END ----- generates random move for computer ----------- //
 
 function gameLoop(playerMove) {
@@ -215,6 +301,55 @@ function gameLoop(playerMove) {
         coordOfAttack = generateComputerAttack();
       }
       const attackOutcome = receiveAttack(coordOfAttack, getTurn);
+      console.log(attackOutcome);
+
+      if (getTurn === `computer`) {
+        if (attackOutcome[0] && !isAITriggered) {
+          console.log(`first hit`);
+          isAITriggered = true;
+          storedGameboards[1][1].ships.fleet.filter((object) => {
+            if (object.isSunk) {
+              numberOfShipsSunkByAI += 1;
+              // console.log(numberOfShipsSunkByAI);
+            }
+          });
+          storedGameboards[1][1].ships.fleet.filter((object) => {
+            // if (attackOutcome[0] === object.name && object.hits.length === 1) {
+            if (attackOutcome[0] === object.name) {
+              initialCPUHitObject = object;
+            }
+          });
+          validSmartMoves = getValidAdjacentCPUMoves(attackOutcome[1]);
+          // console.log(validSmartMoves);
+          // console.log(initialCPUHitObject);
+        }
+        if (isAITriggered) {
+          if (attackOutcome[0]) {
+            isAHit = true;
+            isInitialShipSunk = initialCPUHitObject.isSunk;
+            if (isInitialShipSunk) {
+              // isAITriggered = false;
+              // initialCPUHitObject = null;
+              // hitsCounter = 0;
+              // smartMovesCounter = 0;
+              // isInitialShipSunk = false;
+              // numberOfShipsSunkByAI = 0;
+              breakFromAILoop();
+            }
+            console.log(sunkShipsChecker);
+            console.log(numberOfShipsSunkByAI);
+            console.log(isInitialShipSunk);
+            // if (sunkShipsChecker !== numberOfShipsSunkByAI) {
+            //   isAITriggered = false;
+            // }
+          } else {
+            isAHit = false;
+          }
+        }
+        console.log(validSmartMoves);
+        getValidMoves.splice(getValidMoves.indexOf(attackOutcome[1]), 1);
+      }
+
       // console.log(attackOutcome);
       renderMove(getTurn, attackOutcome);
       if (attackOutcome[0]) {
@@ -226,27 +361,12 @@ function gameLoop(playerMove) {
           }
         });
       }
-      if (getTurn === `computer`) {
-        if (attackOutcome[0] && getTurn === `computer`) {
-          isAITriggered = true;
-          storedGameboards[1][1].ships.fleet.filter((object) => {
-            if (attackOutcome[0] === object.name && object.hits.length === 1)
-              console.log(`first hit`);
-            initialCPUHitArray = [object, attackOutcome[1]];
-          });
-          const validSmartMoves = getValidAdjacentCPUMoves(attackOutcome[1]);
-          // console.log(validSmartMoves);
-        }
-        getValidMoves.splice(getValidMoves.indexOf(attackOutcome[1]), 1);
-      }
 
       if (attackOutcome[0] && getTurn === `player`) {
         let isShipSunk;
-        // let arrayIndex;
         storedGameboards[0][1].ships.fleet.filter((object, index) => {
           if (attackOutcome[0] === object.name) {
             isShipSunk = object.isSunk;
-            // arrayIndex = index;
             if (isShipSunk) {
               const cpuHiddenShips =
                 document.querySelectorAll(`.cpu-ships-rendered`);
@@ -256,6 +376,7 @@ function gameLoop(playerMove) {
           }
         });
       }
+
       if (isGameOver) {
         const gameOverModal = document.querySelector(`#game-over-modal`);
         const displayWinnerText = document.querySelector(`#display-winner`);
@@ -269,6 +390,19 @@ function gameLoop(playerMove) {
       }
     }
   }
+}
+
+function breakFromAILoop() {
+  isAITriggered = false;
+  initialCPUHitObject = null;
+  hitsCounter = 0;
+  smartMovesCounter = 0;
+  isInitialShipSunk = false;
+  numberOfShipsSunkByAI = 0;
+  isRight = true;
+  isLeft = true;
+  isDown = true;
+  isVertical = false;
 }
 
 export { storedGameboards, gameLoop, createPlayerObjects, handleState };

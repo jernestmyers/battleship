@@ -43,7 +43,7 @@ function deregisterRemainingEventListneners(array) {
 }
 
 function renderMove(whoseTurn, attackArray) {
-  console.log({ whoseTurn, attackArray });
+  // console.log({ whoseTurn, attackArray });
   let squares;
   const hitIndex = attackArray[1];
   if (whoseTurn === `player`) {
