@@ -132,7 +132,7 @@ function getMovesDown(hit) {
       verticalMoves.push(coord);
     }
   });
-  console.log(verticalMoves);
+  // console.log(verticalMoves);
   const movesDown = [];
   verticalMoves.slice(verticalMoves.indexOf(hit)).filter((coord, index) => {
     if (coord - hit - index * 10 === 0) {
@@ -208,7 +208,7 @@ function getSmartCPUMove() {
   }
   if (
     // first move is always right if array[0] is truthy
-    validSmartMoves.validMovesRight[0] &&
+    validSmartMoves.validMovesRight.length &&
     isAHit &&
     hitsCounter === smartMovesCounter
   ) {
@@ -218,28 +218,28 @@ function getSmartCPUMove() {
     (isRight &&
       isLeft &&
       // first condition is if moveRight DNE upon entering AI bc hits === smartMoves
-      !validSmartMoves.validMovesRight[0] &&
+      !validSmartMoves.validMovesRight.length &&
       hitsCounter === smartMovesCounter &&
-      validSmartMoves.validMovesLeft[0]) ||
+      validSmartMoves.validMovesLeft.length) ||
     // second condition is for the move immediately after moveRight misses, thus hits and moves differ by 1
     (isRight &&
       isLeft &&
-      validSmartMoves.validMovesLeft[0] &&
+      validSmartMoves.validMovesLeft.length &&
       !isAHit &&
       hitsCounter === smartMovesCounter - 1) ||
     // third condition is if VMR becomes falsy without sinking the ship by running up against right edge of gameboard
     // in this case, hits will equal smartMoves and go left until VML is falsy or a miss is registered
     (isRight &&
       isLeft &&
-      !validSmartMoves.validMovesRight[0] &&
-      validSmartMoves.validMovesLeft[0] &&
+      !validSmartMoves.validMovesRight.length &&
+      validSmartMoves.validMovesLeft.length &&
       hitsCounter === smartMovesCounter)
   ) {
     move = validSmartMoves.validMovesLeft[0];
     validSmartMoves.validMovesLeft.shift();
     isRight = false;
   } else if (
-    validSmartMoves.validMovesLeft[0] &&
+    validSmartMoves.validMovesLeft.length &&
     isAHit &&
     isLeft &&
     !isVertical
@@ -249,9 +249,9 @@ function getSmartCPUMove() {
     validSmartMoves.validMovesLeft.shift();
   } else if (
     // handles the case in which there are no valid moves right or left upon entry into AI
-    !validSmartMoves.validMovesLeft[0] &&
-    !validSmartMoves.validMovesRight[0] &&
-    validSmartMoves.validMovesDown[0] &&
+    !validSmartMoves.validMovesLeft.length &&
+    !validSmartMoves.validMovesRight.length &&
+    validSmartMoves.validMovesDown.length &&
     // hitsCounter === smartMovesCounter
     isLeft &&
     !isVertical
@@ -261,8 +261,8 @@ function getSmartCPUMove() {
     isLeft = false;
     isVertical = true;
   } else if (
-    !validSmartMoves.validMovesLeft[0] &&
-    validSmartMoves.validMovesDown[0] &&
+    !validSmartMoves.validMovesLeft.length &&
+    validSmartMoves.validMovesDown.length &&
     isAHit &&
     isLeft
   ) {
@@ -271,14 +271,14 @@ function getSmartCPUMove() {
     validSmartMoves.validMovesDown.shift();
     isLeft = false;
     isVertical = true;
-  } else if (validSmartMoves.validMovesDown[0] && !isAHit && !isVertical) {
+  } else if (validSmartMoves.validMovesDown.length && !isAHit && !isVertical) {
     // handles the first time a move is made down with the exception of the above else if, thus setting isVertical = true
     move = validSmartMoves.validMovesDown[0];
     validSmartMoves.validMovesDown.shift();
     isLeft = false;
     isVertical = true;
   } else if (
-    validSmartMoves.validMovesDown[0] &&
+    validSmartMoves.validMovesDown.length &&
     isAHit &&
     isDown &&
     isVertical
@@ -286,11 +286,7 @@ function getSmartCPUMove() {
     move = validSmartMoves.validMovesDown[0];
     validSmartMoves.validMovesDown.shift();
     isLeft = false;
-  } else if (
-    validSmartMoves.validMovesUp[0]
-    // !isAHit
-    // isVertical
-  ) {
+  } else if (validSmartMoves.validMovesUp.length) {
     move = validSmartMoves.validMovesUp[0];
     validSmartMoves.validMovesUp.shift();
     isLeft = false;
