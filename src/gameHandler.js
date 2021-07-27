@@ -98,9 +98,10 @@ function getValidAdjacentCPUMoves(initialHit) {
 
 function getMovesRight(hit) {
   const getIndex = getValidMoves.indexOf(hit);
-  const movesRight = getValidMoves.slice(getIndex).filter((item, index) => {
+  const movesRight = [];
+  getValidMoves.slice(getIndex).filter((item, index) => {
     if (item - hit - index === 0 && item < (Math.floor(hit / 10) + 1) * 10) {
-      return item;
+      movesRight.push(item);
     }
   });
   movesRight.shift();
@@ -125,21 +126,19 @@ function getMovesLeft(hit) {
 }
 
 function getMovesDown(hit) {
-  const verticalMoves = getValidMoves.filter((coord) => {
-    if (
-      hit - Math.floor(hit / 10) * 10 ===
-      coord - Math.floor(coord / 10) * 10
-    ) {
-      return coord;
+  const verticalMoves = [];
+  getValidMoves.filter((coord) => {
+    if (hit % 10 === coord % 10) {
+      verticalMoves.push(coord);
     }
   });
-  const movesDown = verticalMoves
-    .slice(verticalMoves.indexOf(hit))
-    .filter((coord, index) => {
-      if (coord - hit - index * 10 === 0) {
-        return coord;
-      }
-    });
+  console.log(verticalMoves);
+  const movesDown = [];
+  verticalMoves.slice(verticalMoves.indexOf(hit)).filter((coord, index) => {
+    if (coord - hit - index * 10 === 0) {
+      movesDown.push(coord);
+    }
+  });
   movesDown.shift();
   // console.log({ movesDown });
   return movesDown;
@@ -303,7 +302,7 @@ function getSmartCPUMove() {
   }
   return move;
 }
-// END ----- generates random move for computer ----------- //
+// END ----- generates move for computer ----------- //
 
 function gameLoop(playerMove) {
   let getTurn;
@@ -347,7 +346,7 @@ function gameLoop(playerMove) {
             }
           });
           validSmartMoves = getValidAdjacentCPUMoves(attackOutcome[1]);
-          // console.log(validSmartMoves);
+          console.log(validSmartMoves);
           console.log(initialCPUHitObject);
         }
         if (isAITriggered) {
@@ -444,6 +443,20 @@ function breakFromAILoop() {
       console.log(hitsDuringAI);
     }
   });
+  if (hitsDuringAI.length !== 0) {
+    initializeAI(hitsDuringAI[0]);
+  }
+}
+
+function initializeAI(adjacentHit) {
+  storedGameboards[1][1].gameboard.filter((object) => {
+    if (object.shipPlacement.includes(adjacentHit)) {
+      initialCPUHitObject = object;
+      initialCPUHitCoordinates = object.shipPlacement;
+    }
+  });
+  console.log(initialCPUHitObject);
+  console.log(initialCPUHitCoordinates);
 }
 
 export { storedGameboards, gameLoop, createPlayerObjects, handleState };
