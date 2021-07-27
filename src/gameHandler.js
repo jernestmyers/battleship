@@ -66,7 +66,7 @@ function handleState() {
   getPlayerMovesRemaining = createValidMovesArray();
 }
 
-// BEGIN ----- generates random move for computer ----------- //
+// BEGIN ----- generates move for computer ----------- //
 function createValidMovesArray() {
   const validMoves = [];
   const maxMoves = 100;
@@ -75,13 +75,6 @@ function createValidMovesArray() {
   }
   return validMoves;
 }
-
-// function generateComputerAttack() {
-//   const randomIndex = Math.floor(Math.random() * getValidMoves.length);
-//   const randomMove = getValidMoves[randomIndex];
-//   getValidMoves.splice(randomIndex, 1);
-//   return randomMove;
-// }
 
 let isAITriggered = false;
 let initialCPUHitObject;
@@ -105,7 +98,6 @@ function getMovesRight(hit) {
     }
   });
   movesRight.shift();
-  // console.log({ movesRight });
   return movesRight;
 }
 
@@ -121,7 +113,6 @@ function getMovesLeft(hit) {
       movesLeft.push(item);
     }
   });
-  // console.log({ movesLeft });
   return movesLeft;
 }
 
@@ -132,7 +123,6 @@ function getMovesDown(hit) {
       verticalMoves.push(coord);
     }
   });
-  // console.log(verticalMoves);
   const movesDown = [];
   verticalMoves.slice(verticalMoves.indexOf(hit)).filter((coord, index) => {
     if (coord - hit - index * 10 === 0) {
@@ -140,7 +130,6 @@ function getMovesDown(hit) {
     }
   });
   movesDown.shift();
-  // console.log({ movesDown });
   return movesDown;
 }
 
@@ -166,7 +155,6 @@ function getMovesUp(hit) {
     movesUp.push(0);
   }
   movesUp.shift();
-  // console.log({ movesUp });
   return movesUp;
 }
 
@@ -175,11 +163,8 @@ function generateComputerAttack() {
   if (!isAITriggered) {
     const randomIndex = Math.floor(Math.random() * getValidMoves.length);
     cpuMove = getValidMoves[randomIndex];
-    // getValidMoves.splice(randomIndex, 1);
   } else if (!isAdjacentShipHit) {
-    // console.log(`begin smart move`);
     cpuMove = getSmartCPUMove();
-    // getValidMoves.splice(getValidMoves.indexOf(cpuMove), 1);
   }
   // else if (isAdjacentShipHit) {
   // }
@@ -207,7 +192,7 @@ function getSmartCPUMove() {
     hitsCounter += 1;
   }
   if (
-    // first move is always right if array[0] is truthy
+    // first move is always right if array.length is truthy
     validSmartMoves.validMovesRight.length &&
     isAHit &&
     hitsCounter === smartMovesCounter
@@ -252,7 +237,6 @@ function getSmartCPUMove() {
     !validSmartMoves.validMovesLeft.length &&
     !validSmartMoves.validMovesRight.length &&
     validSmartMoves.validMovesDown.length &&
-    // hitsCounter === smartMovesCounter
     isLeft &&
     !isVertical
   ) {
@@ -266,7 +250,6 @@ function getSmartCPUMove() {
     isAHit &&
     isLeft
   ) {
-    console.log(`left edge case`);
     move = validSmartMoves.validMovesDown[0];
     validSmartMoves.validMovesDown.shift();
     isLeft = false;
@@ -432,7 +415,7 @@ function breakFromAILoop() {
   isDown = true;
   isVertical = false;
   // }
-  initialCPUHitCoordinates.forEach((coord, index) => {
+  initialCPUHitCoordinates.forEach((coord) => {
     if (hitsDuringAI.includes(coord)) {
       console.log(coord);
       hitsDuringAI.splice(hitsDuringAI.indexOf(coord), 1);
