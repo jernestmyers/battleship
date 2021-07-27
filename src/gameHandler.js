@@ -81,7 +81,6 @@ let initialCPUHitObject;
 let validSmartMoves;
 
 function getValidAdjacentCPUMoves(initialHit) {
-  console.log(initialHit);
   const validMovesRight = getMovesRight(initialHit);
   const validMovesLeft = getMovesLeft(initialHit);
   const validMovesDown = getMovesDown(initialHit);
@@ -165,9 +164,9 @@ function generateComputerAttack() {
     cpuMove = getValidMoves[randomIndex];
   } else if (!isAdjacentShipHit) {
     cpuMove = getSmartCPUMove();
+  } else if (isAdjacentShipHit) {
+    cpuMove = getSmartCPUMove();
   }
-  // else if (isAdjacentShipHit) {
-  // }
   return cpuMove;
 }
 
@@ -175,15 +174,14 @@ let isAdjacentShipHit = false;
 let isAHit = true;
 let hitsCounter = 0;
 let smartMovesCounter = 0;
-let numberOfShipsSunkByAI = 0;
-let sunkShipsChecker = 0;
+// let numberOfShipsSunkByAI = 0;
 let isInitialShipSunk = false;
 let isVertical = false;
 let isRight = true;
 let isLeft = true;
 let isDown = true;
-let hitsDuringAI = [];
-let initialCPUHitCoordinates;
+// let hitsDuringAI = [];
+// let initialCPUHitCoordinates;
 
 function getSmartCPUMove() {
   let move;
@@ -304,66 +302,45 @@ function gameLoop(playerMove) {
 
       if (getTurn === `computer`) {
         if (attackOutcome[0] && !isAITriggered) {
-          console.log(`first hit`);
+          // console.log(`first hit`);
           isAITriggered = true;
+          // storedGameboards[1][1].ships.fleet.filter((object) => {
+          //   if (object.isSunk) {
+          //     numberOfShipsSunkByAI += 1;
+          //   }
+          // });
           storedGameboards[1][1].ships.fleet.filter((object) => {
-            if (object.isSunk) {
-              numberOfShipsSunkByAI += 1;
-              // console.log(numberOfShipsSunkByAI);
-            }
-          });
-          storedGameboards[1][1].ships.fleet.filter((object) => {
-            // if (attackOutcome[0] === object.name && object.hits.length === 1) {
             if (attackOutcome[0] === object.name) {
               initialCPUHitObject = object;
             }
           });
-          storedGameboards[1][1].gameboard.filter((object) => {
-            if (attackOutcome[0] === object.name) {
-              console.log(object.shipPlacement);
-              initialCPUHitCoordinates = object.shipPlacement;
-            }
-          });
+          // storedGameboards[1][1].gameboard.filter((object) => {
+          //   if (attackOutcome[0] === object.name) {
+          //     // console.log(object.shipPlacement);
+          //     initialCPUHitCoordinates = object.shipPlacement;
+          //   }
+          // });
           validSmartMoves = getValidAdjacentCPUMoves(attackOutcome[1]);
-          console.log(validSmartMoves);
-          console.log(initialCPUHitObject);
+          // console.log(validSmartMoves);
+          // console.log(initialCPUHitObject);
         }
         if (isAITriggered) {
           if (attackOutcome[0]) {
-            hitsDuringAI.push(attackOutcome[1]);
+            // hitsDuringAI.push(attackOutcome[1]);
             isAHit = true;
             isInitialShipSunk = initialCPUHitObject.isSunk;
             if (isInitialShipSunk) {
-              // isAITriggered = false;
-              // initialCPUHitObject = null;
-              // hitsCounter = 0;
-              // smartMovesCounter = 0;
-              // isInitialShipSunk = false;
-              // numberOfShipsSunkByAI = 0;
               breakFromAILoop();
             }
-            // console.log(sunkShipsChecker);
-            // console.log(numberOfShipsSunkByAI);
-            // console.log(isInitialShipSunk);
-            console.log(hitsDuringAI);
-            console.log(initialCPUHitCoordinates);
-            // console.log(storedGameboards[1][1].gameboard);
-            // if (sunkShipsChecker !== numberOfShipsSunkByAI) {
-            //   isAITriggered = false;
-            // }
           } else {
             isAHit = false;
           }
         }
-        // console.log(validSmartMoves);
         getValidMoves.splice(getValidMoves.indexOf(attackOutcome[1]), 1);
       }
 
-      // console.log(attackOutcome);
       renderMove(getTurn, attackOutcome);
       if (attackOutcome[0]) {
-        // console.log(attackOutcome);
-        // console.log(storedGameboards);
         storedGameboards.filter((item) => {
           if (item[0] === getTurn) {
             isGameOver = item[1].isGameOver();
@@ -402,40 +379,43 @@ function gameLoop(playerMove) {
 }
 
 function breakFromAILoop() {
-  // if (hitsDuringAI.length === initialCPUHitObject.length) {
-  console.log(`nothing adjacent hit`);
+  // initialCPUHitCoordinates.forEach((coord) => {
+  //   if (hitsDuringAI.includes(coord)) {
+  //     // console.log(coord);
+  //     hitsDuringAI.splice(hitsDuringAI.indexOf(coord), 1);
+  //     // console.log(hitsDuringAI);
+  //   }
+  // });
   isAITriggered = false;
   initialCPUHitObject = null;
   hitsCounter = 0;
   smartMovesCounter = 0;
   isInitialShipSunk = false;
-  numberOfShipsSunkByAI = 0;
+  // numberOfShipsSunkByAI = 0;
   isRight = true;
   isLeft = true;
   isDown = true;
   isVertical = false;
+  // if (!hitsDuringAI.length) {
+  //   // console.log(`nothing adjacent hit`);
+  //   // isAITriggered = false;
+  // } else if (hitsDuringAI.length !== 0) {
+  //   // isAdjacentShipHit = true;
+  //   initializeAI(hitsDuringAI[0]);
   // }
-  initialCPUHitCoordinates.forEach((coord) => {
-    if (hitsDuringAI.includes(coord)) {
-      console.log(coord);
-      hitsDuringAI.splice(hitsDuringAI.indexOf(coord), 1);
-      console.log(hitsDuringAI);
-    }
-  });
-  if (hitsDuringAI.length !== 0) {
-    initializeAI(hitsDuringAI[0]);
-  }
 }
 
-function initializeAI(adjacentHit) {
-  storedGameboards[1][1].gameboard.filter((object) => {
-    if (object.shipPlacement.includes(adjacentHit)) {
-      initialCPUHitObject = object;
-      initialCPUHitCoordinates = object.shipPlacement;
-    }
-  });
-  console.log(initialCPUHitObject);
-  console.log(initialCPUHitCoordinates);
-}
+// function initializeAI(adjacentHit) {
+//   storedGameboards[1][1].gameboard.filter((object) => {
+//     if (object.shipPlacement.includes(adjacentHit)) {
+//       initialCPUHitObject = object;
+//       initialCPUHitCoordinates = object.shipPlacement;
+//     }
+//   });
+//   // console.log(initialCPUHitObject);
+//   // console.log(initialCPUHitCoordinates);
+//   // validSmartMoves = getValidAdjacentCPUMoves(adjacentHit);
+//   // console.log(validSmartMoves);
+// }
 
 export { storedGameboards, gameLoop, createPlayerObjects, handleState };
