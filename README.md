@@ -38,4 +38,4 @@ this is project 6 from the odin project's full stack javascript curriculum
 
 1. if user drags a ship off screen AND drops the ship off screen, the drag-and-drop will break and the page will need to be refreshed
 2. i opted to set overflow: hidden for the page because the drag-and-drop breaks when the page scrolls
-3. not mobile-friendly yet. need media queries to stack the gameboards in a single column if mobile/tablet is portrait-oriented. also, can all scrolling for mobile/tablet versions since the drag-and-drop is not compatible with touch screens.
+3. not mobile-friendly yet. need media queries to stack the gameboards in a single column if mobile/tablet is portrait-oriented. also, can allow scrolling for mobile/tablet versions since the drag-and-drop is not compatible with touch screens.
