@@ -53,10 +53,6 @@ main {
   border: 1px solid #1b1b1e;
 }
 
-.playerSquare:hover {
-  background-color: #829e76;
-}
-
 .hit {
   background-color: #ef271b;
 }
@@ -199,11 +195,6 @@ img {
   margin-bottom: 15px;
 }
 
-#btn-rotate-ship:hover,
-.place-ships-btns:hover {
-  background-color: #c1c1c1;
-}
-
 #btn-rotate-ship:active,
 .place-ships-btns:active {
   background-color: #747474;
@@ -245,10 +236,21 @@ img {
   font-size: 16px;
 }
 
-#new-game-btn:hover {
-  background-color: #30638e;
-}
-
 #new-game-btn:active {
   background-color: #ef271b;
+}
+
+@media (hover: hover) {
+  .playerSquare:hover {
+    background-color: #829e76;
+  }
+
+  #new-game-btn:hover {
+    background-color: #30638e;
+  }
+
+  #btn-rotate-ship:hover,
+  .place-ships-btns:hover {
+    background-color: #c1c1c1;
+  }
 }
