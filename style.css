@@ -254,3 +254,15 @@ img {
     background-color: #c1c1c1;
   }
 }
+
+@media screen and (max-width: 850px) {
+  #btn-rotate-ship,
+  #player-carrier {
+    display: none;
+  }
+
+  html,
+  body {
+    overflow: scroll;
+  }
+}
